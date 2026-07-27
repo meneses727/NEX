@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nosotros — NEX</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream: #F5F0E8;
+    --ink: #1A1A18;
+    --sage: #6B8C6E;
+    --terracotta: #C4704F;
+    --warm-white: #FDFAF5;
+    --muted: #7A7870;
+    --border: rgba(26,26,24,0.12);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--warm-white);
+    color: var(--ink);
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 3rem;
+    background: rgba(253,250,245,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--ink); }
+  .nav-links a.active { color: var(--ink); font-weight: 500; }
+
+  .nav-cta {
+    background: var(--ink);
+    color: var(--warm-white) !important;
+    padding: 0.5rem 1.25rem;
+    border-radius: 100px;
+    font-weight: 500 !important;
+    letter-spacing: 0.02em !important;
+    text-transform: none !important;
+    transition: background 0.2s !important;
+  }
+  .nav-cta:hover { background: #333 !important; color: var(--warm-white) !important; }
+
+  /* SHARED */
+  .section-label {
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.75rem;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 3vw, 2.8rem);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    max-width: 22ch;
+  }
+
+  .btn-primary {
+    background: var(--ink);
+    color: var(--warm-white);
+    padding: 0.9rem 2rem;
+    border-radius: 100px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: none;
+    display: inline-flex;
+    transition: transform 0.2s, background 0.2s;
+  }
+  .btn-primary:hover { background: #333; transform: translateY(-1px); }
+
+  .btn-light {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: white;
+    color: var(--ink);
+    padding: 0.9rem 2rem;
+    border-radius: 100px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-decoration: none;
+    width: fit-content;
+    transition: transform 0.2s;
+  }
+  .btn-light:hover { transform: translateY(-1px); }
+
+  /* PAGE HERO */
+  .about-hero {
+    padding: 10rem 3rem 6rem;
+    background: var(--cream);
+    border-bottom: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: end;
+  }
+
+  .about-hero-eyebrow {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .about-hero-eyebrow::before {
+    content: '';
+    display: block;
+    width: 2rem;
+    height: 1px;
+    background: var(--terracotta);
+  }
+
+  .about-hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.8rem, 4.5vw, 4.2rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin-bottom: 0;
+  }
+
+  .about-hero h1 em {
+    font-style: italic;
+    color: var(--sage);
+  }
+
+  .about-hero-right {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 1.5rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .about-hero-lead {
+    font-size: 1.05rem;
+    font-weight: 300;
+    color: var(--muted);
+    line-height: 1.8;
+    max-width: 44ch;
+  }
+
+  .about-hero-lead strong { font-weight: 500; color: var(--ink); }
+
+  /* WHAT IS NEX */
+  .about-what {
+    padding: 7rem 3rem;
+    background: var(--warm-white);
+    border-bottom: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+  }
+
+  .about-what-left .section-title { margin-bottom: 2rem; }
+
+  .about-what-body {
+    font-size: 0.95rem;
+    font-weight: 300;
+    color: var(--muted);
+    line-height: 1.85;
+  }
+
+  .about-what-body p + p { margin-top: 1rem; }
+
+  .about-what-right {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .about-pill {
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    padding: 1.5rem 2rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .about-pill:hover { border-color: var(--sage); transform: translateX(4px); }
+
+  .about-pill-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: var(--ink);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .about-pill-icon svg { width: 18px; height: 18px; stroke: white; fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+
+  .about-pill-text h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 0.25rem;
+  }
+
+  .about-pill-text p {
+    font-size: 0.82rem;
+    font-weight: 300;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* HOW IT WORKS */
+  .about-how {
+    padding: 7rem 3rem;
+    background: var(--cream);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .about-how-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: end;
+    margin-bottom: 4rem;
+  }
+
+  .about-how-intro {
+    font-size: 1rem;
+    font-weight: 300;
+    color: var(--muted);
+    line-height: 1.8;
+    padding-top: 0.5rem;
+  }
+
+  .about-how-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-bottom: 3rem;
+  }
+
+  .about-how-card {
+    background: var(--cream);
+    padding: 2.5rem 2rem;
+    transition: background 0.3s;
+  }
+  .about-how-card:hover { background: var(--warm-white); }
+
+  .about-how-num {
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    margin-bottom: 0.75rem;
+  }
+
+  .about-how-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 0.75rem;
+    line-height: 1.2;
+  }
+
+  .about-how-card p {
+    font-size: 0.85rem;
+    font-weight: 300;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  /* SCENARIO BUTTONS */
+  .about-scenario {
+    background: var(--warm-white);
+    border: 1px solid var(--border);
+    border-radius: 1.25rem;
+    padding: 2rem 2.5rem;
+    display: flex;
+    gap: 3rem;
+    align-items: center;
+  }
+
+  .about-scenario-text { flex: 1; }
+
+  .about-scenario-text h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 0.4rem;
+  }
+
+  .about-scenario-text p {
+    font-size: 0.85rem;
+    font-weight: 300;
+    color: var(--muted);
+    line-height: 1.65;
+  }
+
+  .about-scenario-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    max-width: 360px;
+    flex-shrink: 0;
+  }
+
+  .scenario-tag {
+    font-size: 0.78rem;
+    font-weight: 400;
+    color: var(--ink);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 0.4rem 0.9rem;
+    background: var(--cream);
+    white-space: nowrap;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .scenario-tag:hover { border-color: var(--ink); background: white; cursor: default; }
+
+  /* NEXI */
+  .about-nexi {
+    padding: 7rem 3rem;
+    background: var(--ink);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+  }
+
+  .about-nexi-left .section-label { color: rgba(255,255,255,0.4); }
+  .about-nexi-left .section-title { color: white; max-width: 18ch; margin-bottom: 1.5rem; }
+
+  .about-nexi-left > p {
+    font-size: 0.95rem;
+    font-weight: 300;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.8;
+    max-width: 42ch;
+    margin-bottom: 0.85rem;
+  }
+
+  .about-nexi-left > p:last-of-type { margin-bottom: 2.5rem; }
+
+  .about-nexi-right {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .nexi-trait {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 1rem;
+    padding: 1.5rem 1.75rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    transition: background 0.2s;
+  }
+  .nexi-trait:hover { background: rgba(255,255,255,0.08); }
+
+  .nexi-trait-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--sage);
+    flex-shrink: 0;
+    margin-top: 0.45rem;
+  }
+
+  .nexi-trait h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 0.25rem;
+  }
+
+  .nexi-trait p {
+    font-size: 0.82rem;
+    font-weight: 300;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.6;
+  }
+
+  /* CTA */
+  .about-cta {
+    padding: 7rem 3rem;
+    background: var(--cream);
+    text-align: center;
+    border-top: 1px solid var(--border);
+  }
+
+  .about-cta .section-label { display: inline-block; margin-bottom: 0.75rem; }
+
+  .about-cta h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 3vw, 2.8rem);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+    color: var(--ink);
+  }
+
+  .about-cta p {
+    font-size: 1rem;
+    font-weight: 300;
+    color: var(--muted);
+    line-height: 1.75;
+    max-width: 44ch;
+    margin: 0 auto 3rem;
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--ink);
+    padding: 2.5rem 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  footer .logo { color: white; font-size: 1.2rem; }
+
+  .footer-copy {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 0.05em;
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="logo">NEX</a>
+  <ul class="nav-links">
+    <li><a href="about.html" class="active">Nosotros</a></li>
+    <li><a href="contact.html">Contacto</a></li>
+    <li><a href="faq.html">Preguntas frecuentes</a></li>
+    <li><a href="login.html" class="nav-cta">Iniciar sesión</a></li>
+  </ul>
+</nav>
+
+<!-- PAGE HERO -->
+<section class="about-hero">
+  <div>
+    <p class="about-hero-eyebrow">Sobre NEX</p>
+    <h1>Salud mental<br>construida en torno a <em>ti.</em></h1>
+  </div>
+  <div class="about-hero-right">
+    <p class="about-hero-lead">NEX significa <strong>Nurturing Emotional eXperience</strong> (Experiencia Emocional Nutritiva) — una plataforma diseñada para sentirse reflexiva, humana y emocionalmente inteligente. No es una herramienta. Es un espacio que es verdaderamente tuyo.</p>
+    <a href="therapynow.html" class="btn-primary">Empezar</a>
+  </div>
+</section>
+
+<!-- WHAT IS NEX -->
+<section class="about-what">
+  <div class="about-what-left">
+    <p class="section-label">¿Qué es NEX?</p>
+    <h2 class="section-title">No se trata de estar roto. Ni de ser extremadamente feliz.</h2>
+    <div class="about-what-body">
+      <p>Los sentimientos fluctúan. Puedes sentir alegría y dolor al mismo tiempo, o no sentir nada en absoluto. Y está bien.</p>
+      <p>NEX ofrece acceso a sesiones de terapia con terapeutas profesionales reales — y también proporciona herramientas de apoyo con IA, según lo que mejor se adapte a ti.</p>
+      <p>Por eso creamos NEX: para ayudarte a gestionar esos sentimientos, paso a paso, sin juicios ni presión.</p>
+    </div>
+  </div>
+  <div class="about-what-right">
+    <div class="about-pill">
+      <div class="about-pill-icon">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+      <div class="about-pill-text">
+        <h4>Terapeutas profesionales reales</h4>
+        <p>Profesionales titulados y con experiencia que realmente te escuchan — disponibles a tu ritmo.</p>
+      </div>
+    </div>
+    <div class="about-pill">
+      <div class="about-pill-icon">
+        <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+      </div>
+      <div class="about-pill-text">
+        <h4>Herramientas de apoyo con IA</h4>
+        <p>Interactúa con NEXI — una guía de IA con conciencia emocional — cuando y como mejor te convenga.</p>
+      </div>
+    </div>
+    <div class="about-pill">
+      <div class="about-pill-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <div class="about-pill-text">
+        <h4>Tu elección, siempre</h4>
+        <p>Apoyo humano o de IA — tú decides qué funciona para ti, y puedes cambiar cuando quieras.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="about-how">
+  <div class="about-how-header">
+    <div>
+      <p class="section-label">Cómo funciona</p>
+      <h2 class="section-title">Todo empieza contigo</h2>
+    </div>
+    <p class="about-how-intro">Cuando te registras, tu perfil se convierte en un espacio que personalizas — no solo tu nombre o tu estado de ánimo, sino aquello que quieres superar, gestionar o a través de lo cual quieres crecer.</p>
+  </div>
+
+  <div class="about-how-grid">
+    <div class="about-how-card">
+      <p class="about-how-num">Plan gratuito</p>
+      <h3>2 sesiones por semana</h3>
+      <p>Sesiones de terapia de 45 minutos, con apoyo completo. Actualiza cuando quieras más — o quédate en el plan gratuito y conserva todo tu historial de progreso.</p>
+    </div>
+    <div class="about-how-card">
+      <p class="about-how-num">Herramientas personalizadas</p>
+      <h3>Tú eliges</h3>
+      <p>Cada semana, elige las herramientas que se adapten a tus necesidades y ritmo actuales — respiración, seguimiento del estado de ánimo, diario y mucho más.</p>
+    </div>
+    <div class="about-how-card">
+      <p class="about-how-num">Flexible</p>
+      <h3>Estructura sin presión</h3>
+      <p>Cambia el enfoque, explora algo nuevo o ajusta tus objetivos con el tiempo. NEX se adapta — tu camino nunca queda cerrado.</p>
+    </div>
+  </div>
+
+  <div class="about-scenario">
+    <div class="about-scenario-text">
+      <h4>Botones basados en escenarios</h4>
+      <p>Accesos directos para momentos de la vida real. Configura 2 en el plan gratuito, cada uno utilizable una vez al día. Personalizados exactamente como los necesitas.</p>
+    </div>
+    <div class="about-scenario-tags">
+      <span class="scenario-tag">"Estabilidad antes de un examen"</span>
+      <span class="scenario-tag">"Motivación matutina"</span>
+      <span class="scenario-tag">"Reinicio nocturno tras agotamiento social"</span>
+      <span class="scenario-tag">"Botón de relajación por sobreestimulación"</span>
+    </div>
+  </div>
+</section>
+
+<!-- NEXI -->
+<section class="about-nexi">
+  <div class="about-nexi-left">
+    <p class="section-label">Conoce a NEXI</p>
+    <h2 class="section-title">Más que un personaje.</h2>
+    <p>NEXI es la guía inteligente integrada en NEX — no es un chatbot, sino un sistema receptivo y con conciencia emocional que te ayuda a navegar tu camino de salud mental.</p>
+    <p>Crece contigo, aprendiendo cómo te gusta gestionar tus emociones, marcar el ritmo de tu progreso y encontrar el apoyo que mejor se adapta a ti.</p>
+    <a href="therapynow.html" class="btn-light">Empezar con NEXI →</a>
+  </div>
+  <div class="about-nexi-right">
+    <div class="nexi-trait">
+      <div class="nexi-trait-dot"></div>
+      <div>
+        <h4>Recuerda tus preferencias</h4>
+        <p>Hace seguimiento de tu ritmo semanal y adapta las sugerencias a lo que realmente funciona para ti.</p>
+      </div>
+    </div>
+    <div class="nexi-trait">
+      <div class="nexi-trait-dot"></div>
+      <div>
+        <h4>Guía sin juzgar</h4>
+        <p>Ofrece una orientación sutil a la hora de elegir herramientas, establecer objetivos o crear botones de escenario — sin presión, sin consejos genéricos.</p>
+      </div>
+    </div>
+    <div class="nexi-trait">
+      <div class="nexi-trait-dot"></div>
+      <div>
+        <h4>Presente en momentos de la vida real</h4>
+        <p>Ya sea haciendo ejercicios de respiración, programando una sesión o registrando cómo te sientes tras un día difícil — NEXI lo personaliza todo.</p>
+      </div>
+    </div>
+    <div class="nexi-trait">
+      <div class="nexi-trait-dot"></div>
+      <div>
+        <h4>Se siente como un asistente que cuida de ti</h4>
+        <p>Diseñado para sentirse más como un compañero atento que como una herramienta — porque así es como debería sentirse el apoyo a la salud mental.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="about-cta">
+  <p class="section-label">¿Listo?</p>
+  <h2>Tu camino de salud mental empieza aquí.</h2>
+  <p>Sin presión, sin juicios. Solo apoyo que se adapta a ti — a tu ritmo, en tus propios términos.</p>
+  <a href="therapynow.html" class="btn-primary">Empezar gratis</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="index.html" class="logo">NEX</a>
+  <p class="footer-copy">© 2025 NEX. Todos los derechos reservados.</p>
+</footer>
+
+</body>
+</html>

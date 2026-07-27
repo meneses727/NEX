@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Preguntas frecuentes — NEX</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream: #F5F0E8;
+    --ink: #1A1A18;
+    --sage: #6B8C6E;
+    --terracotta: #C4704F;
+    --warm-white: #FDFAF5;
+    --muted: #7A7870;
+    --border: rgba(26,26,24,0.12);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--warm-white);
+    color: var(--ink);
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 3rem;
+    background: rgba(253,250,245,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+  .nav-links a {
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--ink); }
+  .nav-links a.active { color: var(--ink); font-weight: 500; }
+  .nav-cta {
+    background: var(--ink);
+    color: var(--warm-white) !important;
+    padding: 0.5rem 1.25rem;
+    border-radius: 100px;
+    font-weight: 500 !important;
+    letter-spacing: 0.02em !important;
+    text-transform: none !important;
+    transition: background 0.2s !important;
+  }
+  .nav-cta:hover { background: #333 !important; }
+
+  /* HERO */
+  .faq-hero {
+    padding: 10rem 3rem 6rem;
+    background: var(--cream);
+    border-bottom: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: end;
+  }
+  .hero-eyebrow {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    display: block;
+    width: 2rem;
+    height: 1px;
+    background: var(--terracotta);
+  }
+  .faq-hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.8rem, 4.5vw, 4.2rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+  .faq-hero h1 em {
+    font-style: italic;
+    color: var(--sage);
+  }
+  .hero-right {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding-bottom: 0.5rem;
+  }
+  .hero-lead {
+    font-size: 1rem;
+    font-weight: 300;
+    color: var(--muted);
+    line-height: 1.8;
+    max-width: 44ch;
+  }
+
+  /* FAQ BODY */
+  .faq-body {
+    padding: 7rem 3rem 8rem;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 6rem;
+    align-items: start;
+  }
+
+  /* STICKY SIDEBAR */
+  .faq-sidebar {
+    position: sticky;
+    top: 7rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .sidebar-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+    margin-bottom: 0.25rem;
+  }
+
+  .sidebar-desc {
+    font-size: 0.82rem;
+    font-weight: 300;
+    color: var(--muted);
+    line-height: 1.75;
+  }
+
+  .sidebar-divider {
+    width: 2rem;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .sidebar-count {
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .sidebar-count span {
+    color: var(--terracotta);
+    font-size: 1.4rem;
+    font-weight: 700;
+    font-family: 'Playfair Display', serif;
+    display: block;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    margin-bottom: 0.25rem;
+  }
+
+  .contact-nudge {
+    margin-top: 0.5rem;
+    padding: 1.25rem;
+    background: var(--cream);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+  }
+
+  .contact-nudge p {
+    font-size: 0.78rem;
+    font-weight: 300;
+    color: var(--muted);
+    line-height: 1.65;
+    margin-bottom: 0.85rem;
+  }
+
+  .contact-nudge a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--terracotta);
+    text-decoration: none;
+    transition: opacity 0.2s;
+  }
+  .contact-nudge a::after { content: '→'; }
+  .contact-nudge a:hover { opacity: 0.7; }
+
+  /* FAQ LIST */
+  .faq-list {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid var(--border);
+  }
+
+  .faq-item {
+    border-bottom: 1px solid var(--border);
+    overflow: hidden;
+  }
+
+  .faq-question {
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 2rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    cursor: pointer;
+    text-align: left;
+    font-family: 'DM Sans', sans-serif;
+    transition: background 0.2s;
+  }
+
+  .faq-question:hover .faq-q-text {
+    color: var(--ink);
+  }
+
+  .faq-q-left {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.25rem;
+    flex: 1;
+  }
+
+  .faq-number {
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    color: var(--terracotta);
+    text-transform: uppercase;
+    margin-top: 0.2rem;
+    flex-shrink: 0;
+    min-width: 2rem;
+  }
+
+  .faq-q-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+    transition: color 0.2s;
+  }
+
+  /* Animated arrow */
+  .faq-arrow {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.25s, border-color 0.25s, transform 0.35s cubic-bezier(0.4, 0.2, 0.2, 1);
+  }
+
+  .faq-arrow svg {
+    width: 13px; height: 13px;
+    stroke: var(--muted); fill: none;
+    stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+    transition: stroke 0.2s, transform 0.35s cubic-bezier(0.4, 0.2, 0.2, 1);
+  }
+
+  .faq-item.open .faq-arrow {
+    background: var(--ink);
+    border-color: var(--ink);
+    transform: rotate(0deg);
+  }
+
+  .faq-item.open .faq-arrow svg {
+    stroke: white;
+    transform: rotate(180deg);
+  }
+
+  /* ANSWER */
+  .faq-answer {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .faq-item.open .faq-answer {
+    grid-template-rows: 1fr;
+  }
+
+  .faq-answer-inner {
+    overflow: hidden;
+  }
+
+  .faq-answer-content {
+    padding: 0 0 2rem 3.25rem;
+    font-size: 0.9rem;
+    font-weight: 300;
+    color: var(--muted);
+    line-height: 1.85;
+    max-width: 60ch;
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--ink);
+    padding: 2.5rem 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  footer .logo { color: white; font-size: 1.2rem; }
+  .footer-copy {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 0.05em;
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="logo">NEX</a>
+  <ul class="nav-links">
+    <li><a href="about.html">Nosotros</a></li>
+    <li><a href="contact.html">Contacto</a></li>
+    <li><a href="faq.html" class="active">Preguntas frecuentes</a></li>
+    <li><a href="login.html" class="nav-cta">Iniciar sesión</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="faq-hero">
+  <div>
+    <p class="hero-eyebrow">Preguntas frecuentes</p>
+    <h1>Preguntas<br><em>respondidas.</em></h1>
+  </div>
+  <div class="hero-right">
+    <p class="hero-lead">Todo lo que necesitas saber sobre NEX — cómo funciona, qué incluye y qué viene después.</p>
+  </div>
+</section>
+
+<!-- BODY -->
+<section class="faq-body">
+
+  <!-- SIDEBAR -->
+  <div class="faq-sidebar">
+    <div>
+      <p class="sidebar-title">Preguntas frecuentes</p>
+      <p class="sidebar-desc">¿No encuentras lo que buscas? Escríbenos — siempre estamos encantados de ayudar.</p>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-count">
+      <span>07</span>
+      preguntas
+    </div>
+    <div class="contact-nudge">
+      <p>¿Aún tienes preguntas? Nuestro equipo está a un mensaje de distancia.</p>
+      <a href="contact.html">Contáctanos</a>
+    </div>
+  </div>
+
+  <!-- FAQ LIST -->
+  <div class="faq-list">
+
+    <div class="faq-item" id="faq-1">
+      <button class="faq-question" onclick="toggle('faq-1')">
+        <div class="faq-q-left">
+          <span class="faq-number">01</span>
+          <span class="faq-q-text">¿Y si solo quiero herramientas, no terapia?</span>
+        </div>
+        <div class="faq-arrow">
+          <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">
+          <p class="faq-answer-content">NEX te permite usar solo las herramientas sin participar en sesiones de terapia. Puedes personalizar tu experiencia para centrarte únicamente en las herramientas de autoayuda desde tu configuración.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-item" id="faq-2">
+      <button class="faq-question" onclick="toggle('faq-2')">
+        <div class="faq-q-left">
+          <span class="faq-number">02</span>
+          <span class="faq-q-text">¿Puedo crear más de dos Botones de Escenario?</span>
+        </div>
+        <div class="faq-arrow">
+          <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">
+          <p class="faq-answer-content">En el plan gratuito, tienes un límite de dos Botones de Escenario. Al actualizar a nuestro plan premium, desbloqueas Botones de Escenario ilimitados y funciones adicionales.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-item" id="faq-3">
+      <button class="faq-question" onclick="toggle('faq-3')">
+        <div class="faq-q-left">
+          <span class="faq-number">03</span>
+          <span class="faq-q-text">¿Y si quiero usar el mismo escenario más de una vez al día?</span>
+        </div>
+        <div class="faq-arrow">
+          <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">
+          <p class="faq-answer-content">El plan gratuito limita el uso de escenarios a una vez al día. Para un acceso ilimitado, considera actualizar a nuestra suscripción premium.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-item" id="faq-4">
+      <button class="faq-question" onclick="toggle('faq-4')">
+        <div class="faq-q-left">
+          <span class="faq-number">04</span>
+          <span class="faq-q-text">¿Qué tipo de anuncios veré?</span>
+        </div>
+        <div class="faq-arrow">
+          <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">
+          <p class="faq-answer-content">El plan gratuito limita el uso de escenarios a una vez al día. Para un acceso ilimitado, considera actualizar a nuestra suscripción premium.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-item" id="faq-5">
+      <button class="faq-question" onclick="toggle('faq-5')">
+        <div class="faq-q-left">
+          <span class="faq-number">05</span>
+          <span class="faq-q-text">¿Los terapeutas realmente usan las herramientas de la plataforma?</span>
+        </div>
+        <div class="faq-arrow">
+          <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">
+          <p class="faq-answer-content">El plan gratuito limita el uso de escenarios a una vez al día. Para un acceso ilimitado, considera actualizar a nuestra suscripción premium.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-item" id="faq-6">
+      <button class="faq-question" onclick="toggle('faq-6')">
+        <div class="faq-q-left">
+          <span class="faq-number">06</span>
+          <span class="faq-q-text">¿Puedo seguir más de un camino terapéutico a la vez?</span>
+        </div>
+        <div class="faq-arrow">
+          <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">
+          <p class="faq-answer-content">El plan gratuito limita el uso de escenarios a una vez al día. Para un acceso ilimitado, considera actualizar a nuestra suscripción premium.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-item" id="faq-7">
+      <button class="faq-question" onclick="toggle('faq-7')">
+        <div class="faq-q-left">
+          <span class="faq-number">07</span>
+          <span class="faq-q-text">¿NEX llegará a ser completamente de pago?</span>
+        </div>
+        <div class="faq-arrow">
+          <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">
+          <p class="faq-answer-content">El plan gratuito limita el uso de escenarios a una vez al día. Para un acceso ilimitado, considera actualizar a nuestra suscripción premium.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="index.html" class="logo">NEX</a>
+  <p class="footer-copy">© 2025 NEX. Todos los derechos reservados.</p>
+</footer>
+
+<script>
+  function toggle(id) {
+    const item = document.getElementById(id);
+    const isOpen = item.classList.contains('open');
+
+    // Close all
+    document.querySelectorAll('.faq-item').forEach(el => el.classList.remove('open'));
+
+    // Open clicked if it wasn't open
+    if (!isOpen) {
+      item.classList.add('open');
+    }
+  }
+</script>
+</body>
+</html>

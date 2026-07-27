@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEX — Salud Mental</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream: #F5F0E8;
+    --ink: #1A1A18;
+    --sage: #6B8C6E;
+    --terracotta: #C4704F;
+    --warm-white: #FDFAF5;
+    --muted: #7A7870;
+    --border: rgba(26,26,24,0.12);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--warm-white);
+    color: var(--ink);
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 3rem;
+    background: rgba(253,250,245,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--ink); }
+
+  .nav-cta {
+    background: var(--ink);
+    color: var(--warm-white) !important;
+    padding: 0.5rem 1.25rem;
+    border-radius: 100px;
+    font-weight: 500 !important;
+    letter-spacing: 0.02em !important;
+    text-transform: none !important;
+    transition: background 0.2s !important;
+  }
+  .nav-cta:hover { background: #333 !important; color: var(--warm-white) !important; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding-top: 5rem;
+  }
+
+  .hero-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 6rem 3rem 6rem 3rem;
+    background: var(--cream);
+    position: relative;
+  }
+
+  .hero-eyebrow {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .hero-eyebrow::before {
+    content: '';
+    display: block;
+    width: 2rem;
+    height: 1px;
+    background: var(--terracotta);
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.8rem, 4.5vw, 4.2rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin-bottom: 2rem;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--sage);
+  }
+
+  .hero-sub {
+    font-size: 1rem;
+    font-weight: 300;
+    color: var(--muted);
+    line-height: 1.75;
+    max-width: 38ch;
+    margin-bottom: 3rem;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .btn-primary {
+    background: var(--ink);
+    color: var(--warm-white);
+    padding: 0.9rem 2rem;
+    border-radius: 100px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: transform 0.2s, background 0.2s;
+  }
+  .btn-primary:hover { background: #333; transform: translateY(-1px); }
+
+  .btn-ghost {
+    color: var(--muted);
+    font-size: 0.875rem;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: color 0.2s;
+  }
+  .btn-ghost:hover { color: var(--ink); }
+  .btn-ghost::after { content: '→'; transition: transform 0.2s; }
+  .btn-ghost:hover::after { transform: translateX(3px); }
+
+  .hero-right {
+    background: var(--ink);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-right-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 70% 30%, rgba(107,140,110,0.25) 0%, transparent 60%),
+      radial-gradient(circle at 20% 80%, rgba(196,112,79,0.2) 0%, transparent 50%);
+  }
+
+  .hero-video-mock {
+    position: relative;
+    z-index: 2;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 1.5rem;
+    aspect-ratio: 4/3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 2rem;
+    overflow: hidden;
+  }
+
+  .play-btn {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    border: 1.5px solid rgba(255,255,255,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .play-btn:hover { background: rgba(255,255,255,0.25); }
+
+  .play-btn svg { width: 22px; height: 22px; fill: white; margin-left: 3px; }
+
+  .hero-stat-row {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    gap: 2rem;
+  }
+
+  .hero-stat { flex: 1; }
+
+  .hero-stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: white;
+    line-height: 1;
+    margin-bottom: 0.25rem;
+  }
+
+  .hero-stat-label {
+    font-size: 0.75rem;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+  }
+
+  .hero-stat-divider {
+    width: 1px;
+    background: rgba(255,255,255,0.1);
+    align-self: stretch;
+  }
+
+  /* TAGLINE STRIP */
+  .tagline-strip {
+    background: var(--terracotta);
+    padding: 1rem 3rem;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .tagline-scroll {
+    display: inline-flex;
+    gap: 4rem;
+    animation: scroll-left 20s linear infinite;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-weight: 400;
+    font-style: italic;
+    color: white;
+    letter-spacing: 0.01em;
+  }
+
+  @keyframes scroll-left {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* FEATURES */
+  .features {
+    padding: 7rem 3rem;
+    background: var(--warm-white);
+  }
+
+  .section-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 4rem;
+  }
+
+  .section-label {
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.75rem;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 3vw, 2.8rem);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    max-width: 22ch;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+
+  .feature-card {
+    background: var(--warm-white);
+    padding: 3rem 2.5rem;
+    transition: background 0.3s;
+  }
+  .feature-card:hover { background: var(--cream); }
+
+  .feature-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 2rem;
+  }
+
+  .feature-icon svg { width: 22px; height: 22px; stroke: white; fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+
+  .feature-num {
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.75rem;
+  }
+
+  .feature-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+    color: var(--ink);
+  }
+
+  .feature-body {
+    font-size: 0.9rem;
+    font-weight: 300;
+    line-height: 1.75;
+    color: var(--muted);
+  }
+
+  /* PHILOSOPHY */
+  .philosophy {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 60vh;
+  }
+
+  .philosophy-left {
+    background: var(--sage);
+    padding: 6rem 3.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .philosophy-left .section-label { color: rgba(255,255,255,0.6); }
+
+  .philosophy-left .section-title {
+    color: white;
+    margin-bottom: 2rem;
+  }
+
+  .philosophy-left p {
+    font-size: 1rem;
+    font-weight: 300;
+    line-height: 1.8;
+    color: rgba(255,255,255,0.8);
+    max-width: 42ch;
+    margin-bottom: 2.5rem;
+  }
+
+  .btn-light {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: white;
+    color: var(--ink);
+    padding: 0.9rem 2rem;
+    border-radius: 100px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-decoration: none;
+    width: fit-content;
+    transition: transform 0.2s;
+  }
+  .btn-light:hover { transform: translateY(-1px); }
+
+  .philosophy-right {
+    background: var(--cream);
+    padding: 6rem 3.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .video-mock-2 {
+    background: var(--ink);
+    border-radius: 1.5rem;
+    aspect-ratio: 16/10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .video-mock-2::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 60% 40%, rgba(107,140,110,0.3) 0%, transparent 60%);
+  }
+
+  /* TESTIMONIALS */
+  .testimonials {
+    padding: 7rem 3rem;
+    background: var(--ink);
+  }
+
+  .testimonials .section-label { color: rgba(255,255,255,0.4); }
+  .testimonials .section-title { color: white; }
+
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 3.5rem;
+  }
+
+  .testimonial-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 1.5rem;
+    padding: 2.5rem;
+    transition: background 0.3s;
+  }
+  .testimonial-card:hover { background: rgba(255,255,255,0.08); }
+
+  .testimonial-card:nth-child(2) {
+    background: var(--terracotta);
+    border-color: transparent;
+  }
+
+  .quote-mark {
+    font-family: 'Playfair Display', serif;
+    font-size: 4rem;
+    line-height: 0.8;
+    color: rgba(255,255,255,0.2);
+    margin-bottom: 1rem;
+  }
+
+  .testimonial-card:nth-child(2) .quote-mark { color: rgba(255,255,255,0.4); }
+
+  .testimonial-text {
+    font-size: 0.95rem;
+    font-weight: 300;
+    line-height: 1.75;
+    color: rgba(255,255,255,0.75);
+    margin-bottom: 2rem;
+  }
+
+  .testimonial-card:nth-child(2) .testimonial-text { color: rgba(255,255,255,0.9); }
+
+  .testimonial-author {
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+  }
+
+  .testimonial-card:nth-child(2) .testimonial-author { color: rgba(255,255,255,0.7); }
+
+  /* CONTACT */
+  .contact {
+    padding: 7rem 3rem;
+    background: var(--cream);
+    text-align: center;
+  }
+
+  .contact .section-label { display: inline-block; margin-bottom: 0.75rem; }
+  .contact .section-title { margin: 0 auto 1.5rem; text-align: center; max-width: none; }
+
+  .contact-sub {
+    font-size: 1rem;
+    font-weight: 300;
+    color: var(--muted);
+    margin-bottom: 3rem;
+    line-height: 1.7;
+  }
+
+  .contact-form {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .contact-form input {
+    flex: 1;
+    min-width: 200px;
+    padding: 0.9rem 1.5rem;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    background: white;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .contact-form input::placeholder { color: var(--muted); }
+  .contact-form input:focus { border-color: var(--sage); }
+
+  /* FOOTER */
+  footer {
+    background: var(--ink);
+    padding: 2.5rem 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  footer .logo { color: white; font-size: 1.2rem; }
+
+  .footer-copy {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 0.05em;
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="logo">NEX</a>
+  <ul class="nav-links">
+    <li><a href="about.html">Nosotros</a></li>
+    <li><a href="contact.html">Contacto</a></li>
+    <li><a href="faq.html">Preguntas frecuentes</a></li>
+    <li><a href="login.html" class="nav-cta">Iniciar sesión</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <p class="hero-eyebrow">Salud mental, redefinida</p>
+    <h1 class="hero-title">
+      Tu salud mental<br>
+      es <em>tuya.</em> La forma<br>
+      en que la defines<br>también debería serlo.
+    </h1>
+    <p class="hero-sub">La salud mental no es igual para todos. NEX te ayuda a gestionar tu bienestar con recursos personalizados, conocimientos de expertos y una comunidad de apoyo.</p>
+    <div class="hero-actions">
+      <a href="therapynow.html" class="btn-primary">Terapia ahora</a>
+      <a href="#" class="btn-ghost">Cómo funciona</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-right-bg"></div>
+    <div class="hero-video-mock">
+      <div class="play-btn">
+        <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+      </div>
+    </div>
+    <div class="hero-stat-row">
+      <div class="hero-stat">
+        <div class="hero-stat-num">2k+</div>
+        <div class="hero-stat-label">Terapeutas</div>
+      </div>
+      <div class="hero-stat-divider"></div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">NEXI</div>
+        <div class="hero-stat-label">Apoyo con IA</div>
+      </div>
+      <div class="hero-stat-divider"></div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">∞</div>
+        <div class="hero-stat-label">Tu elección</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SCROLLING STRIP -->
+<div class="tagline-strip">
+  <div class="tagline-scroll">
+    <span>Terapia personalizada</span>
+    <span>·</span>
+    <span>Humano o IA, tú eliges</span>
+    <span>·</span>
+    <span>Apoyo en tiempo real</span>
+    <span>·</span>
+    <span>Sin juicios, sin presión</span>
+    <span>·</span>
+    <span>Terapia personalizada</span>
+    <span>·</span>
+    <span>Humano o IA, tú eliges</span>
+    <span>·</span>
+    <span>Apoyo en tiempo real</span>
+    <span>·</span>
+    <span>Sin juicios, sin presión</span>
+    <span>·</span>
+    <span>Terapia personalizada</span>
+    <span>·</span>
+    <span>Humano o IA, tú eliges</span>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section class="features">
+  <div class="section-header">
+    <div>
+      <p class="section-label">Qué ofrecemos</p>
+      <h2 class="section-title">Construido en torno a cómo te sientes realmente</h2>
+    </div>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z"/><path d="M12 8v4l3 3"/></svg>
+      </div>
+      <p class="feature-num">01</p>
+      <h3 class="feature-title">Autodescubrimiento personalizado</h3>
+      <p class="feature-body">Un método creado por terapeutas y NEXI para ayudarte a notar cómo te sientes, cómo piensas y de dónde vienen esos pensamientos — para que te entiendas a ti mismo, no solo respondas preguntas.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+      </div>
+      <p class="feature-num">02</p>
+      <h3 class="feature-title">Herramientas instantáneas basadas en lo que compartes</h3>
+      <p class="feature-body">NEX te ofrece herramientas basadas en escenarios que puedes personalizar — calma antes de un examen, motivación para empezar el día o estabilidad antes de un momento social. Apoyo en tiempo real, hecho proactivo.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+      </div>
+      <p class="feature-num">03</p>
+      <h3 class="feature-title">Un espacio que se adapta a ti</h3>
+      <p class="feature-body">Actualiza tu camino terapéutico o no lo hagas. Incluso con un plan de un terapeuta, NEX te permite cambiar el enfoque, explorar algo nuevo o ajustar tus objetivos con el tiempo. Flexibilidad, sin perder la estructura.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PHILOSOPHY -->
+<section class="philosophy">
+  <div class="philosophy-left">
+    <p class="section-label">Nuestra filosofía</p>
+    <h2 class="section-title">Por fin, la salud mental se siente como tuya.</h2>
+    <p>No llegas demasiado tarde, no estás demasiado roto, no eres demasiado diferente — ni demasiado feliz, ni demasiado emocional, ni creas problemas solo por ser como eres. NEX te da espacio para pensar, entender y sentir — sin decirte cómo se supone que debes hacerlo.</p>
+    <a href="therapynow.html" class="btn-light">Empieza hoy →</a>
+  </div>
+  <div class="philosophy-right">
+    <div class="video-mock-2">
+      <div class="play-btn">
+        <svg viewBox="0 0 24 24" style="width:22px;height:22px;fill:white;margin-left:3px"><polygon points="5,3 19,12 5,21"/></svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials">
+  <div>
+    <p class="section-label">Testimonios</p>
+    <h2 class="section-title">Lo que dice la gente</h2>
+  </div>
+  <div class="testimonials-grid">
+    <div class="testimonial-card">
+      <div class="quote-mark">"</div>
+      <p class="testimonial-text">Con NEX sentí, por primera vez, que no me decían cómo debía sentirme. Me encanta poder cambiar entre herramientas según cómo sea mi día. No es una terapia que te presiona, es una terapia que se adapta a ti.</p>
+      <p class="testimonial-author">— Darla</p>
+    </div>
+    <div class="testimonial-card">
+      <div class="quote-mark">"</div>
+      <p class="testimonial-text">Es difícil de explicar, pero NEX no se siente como una app. Se siente como un pequeño espacio que me entiende. Las herramientas de respiración, el tono, incluso su aspecto — me ayudó a calmarme de formas que no esperaba.</p>
+      <p class="testimonial-author">— Romyna</p>
+    </div>
+    <div class="testimonial-card">
+      <div class="quote-mark">"</div>
+      <p class="testimonial-text">He probado otras apps de salud mental y todas se sentían frías o robóticas. Esta se siente humana. Las herramientas son reales, las terapias funcionan y de verdad la uso.</p>
+      <p class="testimonial-author">— Oscar</p>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact">
+  <p class="section-label">Ponte en contacto</p>
+  <h2 class="section-title">Nos encantaría saber de ti</h2>
+  <p class="contact-sub">Ya sea que tengas preguntas o ideas, déjanos tus datos abajo y conectemos.</p>
+  <div class="contact-form">
+    <input type="email" placeholder="Correo electrónico">
+    <input type="text" placeholder="Nombre completo">
+    <a href="contact.html" class="btn-primary" style="white-space:nowrap">Contactar</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="index.html" class="logo">NEX</a>
+  <p class="footer-copy">© 2025 NEX. Todos los derechos reservados.</p>
+</footer>
+
+</body>
+</html>

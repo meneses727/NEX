@@ -111,6 +111,19 @@
   }
   .form-success.visible { display: block; }
 
+  .form-error-banner {
+    display: none;
+    background: #fbeae5;
+    border: 1px solid rgba(196,112,79,0.35);
+    color: var(--terracotta);
+    font-size: 0.8rem;
+    border-radius: 10px;
+    padding: 0.85rem 1rem;
+    margin-bottom: 1.25rem;
+    text-align: center;
+  }
+  .form-error-banner.visible { display: block; }
+
   .switch-auth {
     text-align: center;
     font-size: 0.82rem;
@@ -141,6 +154,7 @@
 
     <div class="auth-form-box">
       <div class="form-success" id="formSuccess">Inicio de sesión correcto. Redirigiendo…</div>
+      <div class="form-error-banner" id="formError"></div>
       <form id="loginForm" novalidate>
         <div class="form-group">
           <label for="loginEmail">Correo electrónico *</label>
@@ -169,7 +183,12 @@
   <p class="footer-copy">&copy; 2025 NEX. Todos los derechos reservados.</p>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+  const SUPABASE_URL = 'https://iljxvjapyoenpucxenih.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlsanh2amFweW9lbnB1Y3hlbmloIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU1MzQxNzAsImV4cCI6MjEwMTExMDE3MH0.wHgZ25wIcUH5ci6RgsiGvaI1fNTk9ZcLbpw2REjoh_4';
+  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   const form = document.getElementById('loginForm');
@@ -178,6 +197,8 @@
   const passwordInput = document.getElementById('loginPassword');
   const passwordError = document.getElementById('loginPasswordError');
   const success = document.getElementById('formSuccess');
+  const authError = document.getElementById('formError');
+  const submitBtn = form.querySelector('button[type="submit"]');
 
   function validateEmail() {
     const valid = emailRegex.test(emailInput.value.trim());
@@ -196,14 +217,33 @@
   emailInput.addEventListener('input', () => { if (emailInput.classList.contains('invalid')) validateEmail(); });
   passwordInput.addEventListener('input', () => { if (passwordInput.classList.contains('invalid')) validatePassword(); });
 
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
+    authError.classList.remove('visible');
     const emailOk = validateEmail();
     const passOk = validatePassword();
-    if (emailOk && passOk) {
-      success.classList.add('visible');
-      setTimeout(() => { window.location.href = 'index.html'; }, 1200);
+    if (!emailOk || !passOk) return;
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Iniciando sesión…';
+
+    const { data, error } = await supabaseClient.auth.signInWithPassword({
+      email: emailInput.value.trim(),
+      password: passwordInput.value
+    });
+
+    if (error) {
+      authError.textContent = error.message === 'Invalid login credentials'
+        ? 'Correo o contraseña incorrectos.'
+        : 'No pudimos iniciar sesión: ' + error.message;
+      authError.classList.add('visible');
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Iniciar sesión';
+      return;
     }
+
+    success.classList.add('visible');
+    setTimeout(() => { window.location.href = 'index.html'; }, 1000);
   });
 </script>
 </body>

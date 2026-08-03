@@ -146,7 +146,7 @@
     <li><a href="about.html">Nosotros</a></li>
     <li><a href="contact.html">Contacto</a></li>
     <li><a href="faq.html">Preguntas frecuentes</a></li>
-    <li><a href="login.html" class="nav-cta">Iniciar sesión</a></li>
+    <li id="navAuthSlot"><a href="login.html" class="nav-cta">Iniciar sesión</a></li>
   </ul>
 </nav>
 
@@ -201,10 +201,10 @@
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="auth-nav.js"></script>
 <script>
-  const SUPABASE_URL = 'https://iljxvjapyoenpucxenih.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlsanh2amFweW9lbnB1Y3hlbmloIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU1MzQxNzAsImV4cCI6MjEwMTExMDE3MH0.wHgZ25wIcUH5ci6RgsiGvaI1fNTk9ZcLbpw2REjoh_4';
-  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const supabaseClient = getSupabaseClient();
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -293,12 +293,19 @@
         .insert({ id: data.user.id, name: nameInput.value.trim() });
 
       if (profileError) {
-        console.error('Error creando el perfil:', profileError);
+        authError.textContent = 'Cuenta creada, pero hubo un problema guardando tu perfil: ' + profileError.message;
+        authError.classList.add('visible');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Crear cuenta';
+        return;
       }
     }
 
+    success.textContent = data.session
+      ? 'Cuenta creada correctamente. Redirigiendo a inicio de sesión…'
+      : 'Cuenta creada. Revisa tu correo y confirma tu cuenta antes de iniciar sesión.';
     success.classList.add('visible');
-    setTimeout(() => { window.location.href = 'login.html'; }, 1400);
+    setTimeout(() => { window.location.href = 'login.html'; }, 2200);
   });
 </script>
 </body>

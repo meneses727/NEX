@@ -75,9 +75,20 @@
     border-radius: 100px; padding: 0.8rem 2rem;
     font-size: 0.9rem; font-weight: 500; cursor: pointer;
     font-family: 'DM Sans', sans-serif; transition: border-color 0.2s, background 0.2s;
-    display: block; width: 100%; margin-top: 1.75rem;
+    display: block; width: 100%; margin-top: 0.85rem;
+    text-align: center; text-decoration: none;
   }
   .btn-secondary:hover { border-color: var(--ink); background: var(--cream); }
+
+  .btn-primary-full {
+    background: var(--ink); color: white; border: none;
+    border-radius: 100px; padding: 0.85rem 2rem;
+    font-size: 0.9rem; font-weight: 500; cursor: pointer;
+    font-family: 'DM Sans', sans-serif; transition: background 0.2s;
+    display: block; width: 100%; margin-top: 1.75rem;
+    text-align: center; text-decoration: none;
+  }
+  .btn-primary-full:hover { background: #333; }
 
   .loading-text { text-align: center; color: var(--muted); font-size: 0.85rem; }
 
@@ -124,11 +135,12 @@
 
     const { data: profile, error } = await supabaseClient
       .from('profiles')
-      .select('name, phone, age, tipo_consulta')
+      .select('name, phone, age, tipo_consulta, role, track')
       .eq('id', user.id)
       .single();
 
     const name = (profile && profile.name) ? profile.name : (user.email || 'Usuario');
+    const isTherapist = profile && profile.role === 'therapist';
 
     let rows = `
       <div class="profile-row">
@@ -157,15 +169,28 @@
       </div>`;
     }
 
+    if (!isTherapist && profile && profile.track) {
+      rows += `
+      <div class="profile-row">
+        <p class="label">Track asignado</p>
+        <p class="value">Track ${escapeHtml(profile.track)}</p>
+      </div>`;
+    }
+
+    const assignButton = isTherapist
+      ? `<a href="assign-track.html" class="btn-primary-full">Asignar tratamiento</a>`
+      : '';
+
     card.innerHTML = `
       <div class="profile-avatar">
         <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.5-7 8-7s8 3 8 7"/>
         </svg>
       </div>
-      <p class="profile-eyebrow">Tu cuenta</p>
+      <p class="profile-eyebrow">${isTherapist ? 'Cuenta de terapeuta' : 'Tu cuenta'}</p>
       <h2 class="profile-title">Hola, <em>${escapeHtml(name)}</em></h2>
       <div class="profile-box">${rows}</div>
+      ${assignButton}
       <button class="btn-secondary" id="logoutBtn">Cerrar sesión</button>
     `;
 

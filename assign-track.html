@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Asignar tratamiento — NEX</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --cream: #F5F0E8; --ink: #1A1A18; --sage: #6B8C6E;
+    --terracotta: #C4704F; --warm-white: #FDFAF5; --muted: #7A7870;
+    --border: rgba(26,26,24,0.12); --sage-light: #f0f5f1;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--warm-white); color: var(--ink); overflow-x: hidden; }
+
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.25rem 3rem;
+    background: rgba(253,250,245,0.92); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .logo { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 900; letter-spacing: -0.02em; color: var(--ink); text-decoration: none; }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; align-items: center; }
+  .nav-links a { font-size: 0.875rem; font-weight: 400; color: var(--muted); text-decoration: none; letter-spacing: 0.04em; text-transform: uppercase; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--ink); }
+  .nav-cta { background: var(--ink); color: var(--warm-white) !important; padding: 0.5rem 1.25rem; border-radius: 100px; font-weight: 500 !important; text-transform: none !important; }
+
+  footer { background: var(--ink); padding: 2.5rem 3rem; display: flex; align-items: center; justify-content: space-between; }
+  footer .logo { color: white; font-size: 1.2rem; }
+  .footer-copy { font-size: 0.75rem; color: rgba(255,255,255,0.3); letter-spacing: 0.05em; }
+
+  .back-btn {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: none; border: 1px solid var(--border);
+    border-radius: 100px; padding: 0.5rem 1.1rem;
+    font-size: 0.8rem; font-weight: 400; color: var(--muted);
+    cursor: pointer; font-family: 'DM Sans', sans-serif;
+    transition: border-color 0.2s, color 0.2s; text-decoration: none;
+    margin-bottom: 2rem; letter-spacing: 0.02em;
+  }
+  .back-btn:hover { border-color: var(--ink); color: var(--ink); }
+  .back-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+  .page-wrap { padding: 9rem 3rem 6rem; min-height: 100vh; }
+
+  .q-card {
+    background: var(--sage-light); border-radius: 20px;
+    padding: 3.5rem; max-width: 560px; margin: 0 auto;
+    box-shadow: 0 4px 24px rgba(26,26,24,0.07);
+  }
+  .q-eyebrow { font-size: 0.65rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.6rem; }
+  .q-title { font-family: 'Playfair Display', serif; font-size: 1.7rem; font-weight: 700; color: var(--ink); line-height: 1.25; letter-spacing: -0.01em; margin-bottom: 0.5rem; }
+  .q-title em { font-style: italic; color: var(--sage); }
+  .q-sub { font-size: 0.875rem; font-weight: 300; color: var(--muted); line-height: 1.7; margin-bottom: 2.5rem; }
+
+  .form-box {
+    background: white; border-radius: 14px; padding: 2rem 2.25rem;
+    border: 1px solid var(--border);
+  }
+  .form-group { margin-bottom: 1.5rem; }
+  .form-group:last-of-type { margin-bottom: 0; }
+  .form-group label { display: block; font-size: 0.78rem; font-weight: 500; color: var(--ink); margin-bottom: 0.5rem; letter-spacing: 0.02em; }
+  .form-select {
+    width: 100%; padding: 0.75rem 1rem; border: 1.5px solid var(--border);
+    border-radius: 10px; font-size: 0.875rem; font-family: 'DM Sans', sans-serif;
+    color: var(--ink); background: white; transition: border-color 0.2s; outline: none;
+    cursor: pointer;
+  }
+  .form-select:focus { border-color: var(--ink); }
+
+  .btn-primary {
+    background: var(--ink); color: white; border: none;
+    border-radius: 100px; padding: 0.85rem 2.5rem;
+    font-size: 0.9rem; font-weight: 500; cursor: pointer;
+    font-family: 'DM Sans', sans-serif; transition: background 0.2s;
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; letter-spacing: 0.02em;
+    width: 100%; margin-top: 0.5rem;
+  }
+  .btn-primary:hover { background: #333; }
+  .btn-primary:disabled { background: #ccc; cursor: not-allowed; }
+
+  .form-success {
+    display: none;
+    background: var(--sage-light);
+    border: 1px solid rgba(107,140,110,0.3);
+    color: var(--sage);
+    font-size: 0.8rem;
+    border-radius: 10px;
+    padding: 0.85rem 1rem;
+    margin-bottom: 1.25rem;
+    text-align: center;
+  }
+  .form-success.visible { display: block; }
+
+  .form-error-banner {
+    display: none;
+    background: #fbeae5;
+    border: 1px solid rgba(196,112,79,0.35);
+    color: var(--terracotta);
+    font-size: 0.8rem;
+    border-radius: 10px;
+    padding: 0.85rem 1rem;
+    margin-bottom: 1.25rem;
+    text-align: center;
+  }
+  .form-error-banner.visible { display: block; }
+
+  .loading-text { text-align: center; color: var(--muted); font-size: 0.85rem; }
+
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="logo">NEX</a>
+  <ul class="nav-links">
+    <li><a href="about.html">Nosotros</a></li>
+    <li><a href="contact.html">Contacto</a></li>
+    <li><a href="faq.html">Preguntas frecuentes</a></li>
+    <li id="navAuthSlot"><a href="login.html" class="nav-cta">Iniciar sesión</a></li>
+  </ul>
+</nav>
+
+<div class="page-wrap">
+  <a href="profile.html" class="back-btn"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Volver a mi perfil</a>
+
+  <div class="q-card" id="mainCard">
+    <p class="loading-text">Cargando…</p>
+  </div>
+</div>
+
+<footer>
+  <a href="index.html" class="logo">NEX</a>
+  <p class="footer-copy">&copy; 2025 NEX. Todos los derechos reservados.</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="auth-nav.js"></script>
+<script>
+  const supabaseClient = getSupabaseClient();
+  const mainCard = document.getElementById('mainCard');
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  function renderForm(patients) {
+    const options = patients.map(p =>
+      `<option value="${p.id}">${escapeHtml(p.name || 'Sin nombre')}</option>`
+    ).join('');
+
+    mainCard.innerHTML = `
+      <p class="q-eyebrow">Asignar tratamiento</p>
+      <h2 class="q-title">Elige el <em>track</em> del paciente.</h2>
+      <p class="q-sub">Selecciona un paciente y el track que le corresponde. Puedes cambiarlo cuando quieras.</p>
+
+      <div class="form-box">
+        <div class="form-success" id="formSuccess">Track asignado correctamente.</div>
+        <div class="form-error-banner" id="formError"></div>
+        <form id="assignForm">
+          <div class="form-group">
+            <label for="patientSelect">Paciente *</label>
+            <select id="patientSelect" class="form-select" required>
+              <option value="" disabled selected>Selecciona un paciente</option>
+              ${options}
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="trackSelect">Track *</label>
+            <select id="trackSelect" class="form-select" required>
+              <option value="" disabled selected>Selecciona un track</option>
+              <option value="A">Track A</option>
+              <option value="B">Track B</option>
+              <option value="C">Track C</option>
+            </select>
+          </div>
+          <button type="submit" class="btn-primary" id="submitBtn">Guardar</button>
+        </form>
+      </div>
+    `;
+
+    const form = document.getElementById('assignForm');
+    const success = document.getElementById('formSuccess');
+    const authError = document.getElementById('formError');
+    const submitBtn = document.getElementById('submitBtn');
+    const patientSelect = document.getElementById('patientSelect');
+    const trackSelect = document.getElementById('trackSelect');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      success.classList.remove('visible');
+      authError.classList.remove('visible');
+
+      if (!patientSelect.value || !trackSelect.value) return;
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Guardando…';
+
+      const { error } = await supabaseClient
+        .from('profiles')
+        .update({ track: trackSelect.value })
+        .eq('id', patientSelect.value);
+
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Guardar';
+
+      if (error) {
+        authError.textContent = 'No se pudo guardar: ' + error.message;
+        authError.classList.add('visible');
+        return;
+      }
+
+      success.classList.add('visible');
+    });
+  }
+
+  async function init() {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    if (!session) {
+      window.location.href = 'login.html';
+      return;
+    }
+
+    const { data: myProfile } = await supabaseClient
+      .from('profiles')
+      .select('role')
+      .eq('id', session.user.id)
+      .single();
+
+    if (!myProfile || myProfile.role !== 'therapist') {
+      window.location.href = 'profile.html';
+      return;
+    }
+
+    const { data: patients, error } = await supabaseClient
+      .from('profiles')
+      .select('id, name, role')
+      .neq('role', 'therapist')
+      .order('name', { ascending: true });
+
+    if (error) {
+      mainCard.innerHTML = `<p class="loading-text">No se pudo cargar la lista de pacientes.</p>`;
+      return;
+    }
+
+    renderForm(patients || []);
+  }
+
+  init();
+</script>
+</body>
+</html>

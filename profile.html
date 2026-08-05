@@ -12,6 +12,7 @@
     --cream: #F5F0E8; --ink: #1A1A18; --sage: #6B8C6E;
     --terracotta: #C4704F; --warm-white: #FDFAF5; --muted: #7A7870;
     --border: rgba(26,26,24,0.12); --sage-light: #f0f5f1;
+    --banner-color: #CFE8D3;
   }
   html { scroll-behavior: smooth; }
   body { font-family: 'DM Sans', sans-serif; background: var(--warm-white); color: var(--ink); overflow-x: hidden; }
@@ -34,180 +35,128 @@
   .footer-copy { font-size: 0.75rem; color: rgba(255,255,255,0.3); letter-spacing: 0.05em; }
 
   .page-wrap {
-    padding: 9rem 3rem 6rem; min-height: 100vh;
+    padding: 8.5rem 3rem 5rem; min-height: 100vh;
+    display: flex; justify-content: center;
+  }
+
+  .profile-page { width: 100%; max-width: 1080px; }
+
+  .loading-text { text-align: center; color: var(--muted); font-size: 0.9rem; padding: 6rem 2rem; }
+
+  /* ---- Banner ---- */
+  .profile-banner {
+    position: relative; height: 170px; border-radius: 20px;
+    background: var(--banner-color); transition: background 0.25s ease;
+  }
+  .banner-color-btn {
+    position: absolute; top: 1rem; right: 1rem;
+    width: 38px; height: 38px; border-radius: 50%;
+    background: rgba(253,250,245,0.9); border: none; cursor: pointer;
     display: flex; align-items: center; justify-content: center;
+    font-size: 1.05rem; box-shadow: 0 2px 6px rgba(0,0,0,0.15);
   }
-
-  .profile-card {
-    background: var(--sage-light); border-radius: 20px;
-    padding: 3rem; width: 100%; max-width: 440px;
-    box-shadow: 0 4px 24px rgba(26,26,24,0.07);
+  .color-picker {
+    position: absolute; top: 3.6rem; right: 1rem;
+    background: white; border-radius: 14px; padding: 0.7rem;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+    display: none; grid-template-columns: repeat(4, 1fr); gap: 0.55rem;
+    z-index: 20;
   }
+  .color-picker.open { display: grid; }
+  .color-swatch { width: 26px; height: 26px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; padding: 0; }
+  .color-swatch.selected { border-color: var(--ink); }
 
-  .profile-avatar {
-    width: 72px; height: 72px; border-radius: 50%;
-    background: var(--ink); color: var(--warm-white);
-    display: flex; align-items: center; justify-content: center;
-    margin: 0 auto 1.5rem;
+  /* ---- Header: avatar + name/email ---- */
+  .profile-header {
+    display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;
+    padding: 0 1rem; margin-top: -55px; margin-bottom: 2.5rem;
   }
+  .profile-avatar-btn {
+    width: 112px; height: 112px; border-radius: 50%; flex-shrink: 0;
+    border: 5px solid var(--warm-white); background: var(--sage);
+    cursor: pointer; padding: 0; overflow: hidden;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+  }
+  .profile-avatar-btn img { width: 100%; height: 100%; display: block; object-fit: cover; }
+  .profile-idblock { padding-top: 55px; min-width: 0; }
+  .profile-name { font-family: 'Playfair Display', serif; font-weight: 700; font-size: 1.7rem; line-height: 1.2; }
+  .profile-email { font-size: 0.9rem; color: var(--muted); margin-top: 0.25rem; }
+  .profile-eyebrow { font-size: 0.65rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); padding-top: 55px; margin-left: auto; align-self: flex-start; }
 
-  .profile-eyebrow { font-size: 0.65rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.6rem; text-align: center; }
-  .profile-title { font-family: 'Playfair Display', serif; font-size: 1.7rem; font-weight: 700; color: var(--ink); line-height: 1.25; letter-spacing: -0.01em; margin-bottom: 2rem; text-align: center; }
-  .profile-title em { font-style: italic; color: var(--sage); }
+  /* ---- Section shell ---- */
+  .section-block { margin-bottom: 2.25rem; }
+  .section-label { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; padding: 0 0.25rem; }
+
+  .profile-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 1.75rem; margin-bottom: 2.25rem; align-items: start; }
+  @media (max-width: 760px) { .profile-grid { grid-template-columns: 1fr; } }
 
   .profile-box {
-    background: white; border-radius: 14px; border: 1px solid var(--border);
-    overflow: hidden;
+    background: white; border-radius: 16px; border: 1px solid var(--border); overflow: hidden;
   }
-  .profile-row {
-    padding: 1.25rem 1.75rem;
-    border-bottom: 1px solid var(--border);
-  }
+  .profile-row { padding: 1.25rem 1.75rem; border-bottom: 1px solid var(--border); }
   .profile-row:last-child { border-bottom: none; }
-  .profile-row .label {
-    font-size: 0.65rem; font-weight: 600; letter-spacing: 0.1em;
-    text-transform: uppercase; color: var(--muted); margin-bottom: 0.3rem;
-  }
-  .profile-row .value { font-size: 0.95rem; color: var(--ink); font-weight: 400; }
+  .profile-row .label { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.3rem; }
+  .profile-row .value { font-size: 1rem; color: var(--ink); font-weight: 400; }
 
+  /* ---- Scenario buttons ---- */
+  .scenario-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+  @media (max-width: 760px) { .scenario-grid { grid-template-columns: 1fr; } }
+  .scenario-card {
+    background: white; border: 1px solid var(--border); border-radius: 14px;
+    padding: 1.5rem 1.25rem; font-size: 0.95rem; font-weight: 500; color: var(--ink);
+    text-align: left; font-family: 'DM Sans', sans-serif;
+    display: flex; flex-direction: column; gap: 0.5rem; cursor: default; min-height: 88px; justify-content: center;
+  }
+  .scenario-card .emoji { font-size: 1.4rem; }
+
+  /* ---- Calendar ---- */
+  .calendar-box { background: white; border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem 1.6rem; height: 100%; }
+  .calendar-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.1rem; }
+  .calendar-nav button { background: none; border: none; cursor: pointer; font-size: 1.1rem; color: var(--muted); padding: 0.25rem 0.7rem; border-radius: 6px; }
+  .calendar-nav button:hover { background: var(--cream); }
+  .calendar-month-label { font-family: 'Playfair Display', serif; font-weight: 700; font-size: 1.05rem; text-transform: capitalize; }
+  .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.3rem; text-align: center; }
+  .calendar-dow { font-size: 0.65rem; color: var(--muted); font-weight: 600; padding-bottom: 0.45rem; text-transform: uppercase; }
+  .calendar-day { font-size: 0.85rem; padding: 0.55rem 0; border-radius: 8px; color: var(--ink); }
+  .calendar-day.empty { visibility: hidden; }
+  .calendar-day.today { background: var(--sage); color: white; font-weight: 600; }
+  .calendar-empty-note { margin-top: 1rem; font-size: 0.8rem; color: var(--muted); text-align: center; }
+
+  .action-row { display: flex; justify-content: flex-end; gap: 1rem; flex-wrap: wrap; }
   .btn-secondary {
     background: none; color: var(--ink); border: 1.5px solid var(--border);
-    border-radius: 100px; padding: 0.8rem 2rem;
+    border-radius: 100px; padding: 0.85rem 2.25rem;
     font-size: 0.9rem; font-weight: 500; cursor: pointer;
     font-family: 'DM Sans', sans-serif; transition: border-color 0.2s, background 0.2s;
-    display: block; width: 100%; margin-top: 0.85rem;
-    text-align: center; text-decoration: none;
+    text-decoration: none;
   }
   .btn-secondary:hover { border-color: var(--ink); background: var(--cream); }
 
   .btn-primary-full {
     background: var(--ink); color: white; border: none;
-    border-radius: 100px; padding: 0.85rem 2rem;
+    border-radius: 100px; padding: 0.85rem 2.25rem;
     font-size: 0.9rem; font-weight: 500; cursor: pointer;
     font-family: 'DM Sans', sans-serif; transition: background 0.2s;
-    display: block; width: 100%; margin-top: 1.75rem;
-    text-align: center; text-decoration: none;
+    text-decoration: none;
   }
   .btn-primary-full:hover { background: #333; }
 
-  .loading-text { text-align: center; color: var(--muted); font-size: 0.85rem; }
-
-  /* ---- Profile card container adjustments ---- */
-  .profile-card { padding: 0 0 3rem; overflow: visible; }
-  .profile-card-inner { padding: 0 3rem; }
-
-  /* ---- Banner ---- */
-  .profile-banner {
-    height: 120px; border-radius: 20px 20px 0 0;
-    background: var(--banner-color, #AEE1F9);
-    position: relative; transition: background 0.25s ease;
-  }
-  .banner-edit-badge {
-    position: absolute; top: 12px; right: 12px;
-    background: rgba(255,255,255,0.85); backdrop-filter: blur(4px);
-    border: none; border-radius: 100px; padding: 0.4rem 0.9rem;
-    font-family: 'DM Sans', sans-serif; font-size: 0.7rem; font-weight: 500;
-    letter-spacing: 0.03em; color: var(--ink); cursor: pointer;
-    display: flex; align-items: center; gap: 0.3rem;
-  }
-  .banner-color-picker {
-    position: absolute; top: 52px; right: 12px;
-    display: none; gap: 0.5rem; background: white; padding: 0.6rem;
-    border-radius: 100px; box-shadow: 0 6px 20px rgba(26,26,24,0.18); z-index: 5;
-  }
-  .banner-color-picker.active { display: flex; }
-  .banner-color-dot {
-    width: 22px; height: 22px; border-radius: 50%; cursor: pointer;
-    border: 2px solid transparent; padding: 0;
-  }
-  .banner-color-dot.active { border-color: var(--ink); }
-
-  /* ---- Avatar + name/email header row ---- */
-  .profile-header-row {
-    display: flex; align-items: center; gap: 1rem;
-    margin: -42px 0 1.75rem; padding: 0 0.25rem;
-  }
-  .profile-avatar-wrap { position: relative; flex-shrink: 0; }
-  .profile-avatar-img {
-    width: 84px; height: 84px; border-radius: 50%; object-fit: cover;
-    border: 4px solid var(--sage-light); background: white; display: block;
-    box-shadow: 0 3px 10px rgba(26,26,24,0.12);
-  }
-  .avatar-edit-badge {
-    position: absolute; bottom: 0; right: 0; width: 26px; height: 26px;
-    border-radius: 50%; background: var(--ink); color: white;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 12px; cursor: pointer; border: 2px solid var(--sage-light);
-  }
-  .profile-header-text { min-width: 0; }
-  .profile-header-name {
-    font-family: 'Playfair Display', serif; font-size: 1.25rem; font-weight: 700;
-    color: var(--ink); line-height: 1.25;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  }
-  .profile-header-email {
-    font-size: 0.8rem; color: var(--muted); margin-top: 0.15rem;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  }
-  .profile-header-tag {
-    font-size: 0.62rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
-    color: var(--sage); margin-top: 0.3rem;
-  }
-
   /* ---- Avatar picker modal ---- */
-  .avatar-picker-overlay {
+  .modal-overlay {
     position: fixed; inset: 0; background: rgba(26,26,24,0.45);
-    display: none; align-items: center; justify-content: center; z-index: 300;
-    padding: 1.5rem;
+    display: none; align-items: center; justify-content: center; z-index: 200; padding: 1.5rem;
   }
-  .avatar-picker-overlay.active { display: flex; }
-  .avatar-picker-box {
-    background: white; border-radius: 18px; padding: 2rem; max-width: 380px; width: 100%;
-    text-align: center;
+  .modal-overlay.open { display: flex; }
+  .modal-box { background: white; border-radius: 20px; padding: 2rem; max-width: 380px; width: 100%; text-align: center; }
+  .modal-title { font-family: 'Playfair Display', serif; font-weight: 700; font-size: 1.2rem; margin-bottom: 1.4rem; }
+  .avatar-options { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.9rem; margin-bottom: 1.5rem; }
+  .avatar-option { width: 100%; aspect-ratio: 1; border-radius: 50%; border: 3px solid transparent; cursor: pointer; overflow: hidden; padding: 0; background: var(--cream); }
+  .avatar-option.selected { border-color: var(--sage); }
+  .avatar-option img { width: 100%; height: 100%; display: block; object-fit: cover; }
+  .modal-close {
+    background: none; color: var(--muted); border: none; font-size: 0.85rem;
+    cursor: pointer; font-family: 'DM Sans', sans-serif; text-decoration: underline;
   }
-  .avatar-picker-title { font-family: 'Playfair Display', serif; font-weight: 700; font-size: 1.1rem; margin-bottom: 0.35rem; }
-  .avatar-picker-sub { font-size: 0.8rem; color: var(--muted); margin-bottom: 1.25rem; }
-  .avatar-options { display: flex; gap: 0.9rem; justify-content: center; flex-wrap: wrap; }
-  .avatar-option-img {
-    width: 66px; height: 66px; border-radius: 50%; object-fit: cover; cursor: pointer;
-    border: 3px solid transparent; transition: border-color 0.15s;
-  }
-  .avatar-option-img.selected, .avatar-option-img:hover { border-color: var(--sage); }
-  .avatar-picker-close {
-    margin-top: 1.5rem; background: none; border: none; color: var(--muted);
-    font-size: 0.8rem; cursor: pointer; text-decoration: underline;
-  }
-
-  /* ---- Scenario buttons (patients only) ---- */
-  .scenario-section { margin-top: 1.75rem; }
-  .section-eyebrow {
-    font-size: 0.65rem; font-weight: 600; letter-spacing: 0.1em;
-    text-transform: uppercase; color: var(--muted); margin-bottom: 0.7rem;
-  }
-  .scenario-buttons { display: flex; gap: 0.6rem; flex-wrap: wrap; }
-  .scenario-btn {
-    flex: 1 1 30%; min-width: 110px;
-    background: white; border: 1px solid var(--border); border-radius: 14px;
-    padding: 1rem 0.75rem; font-size: 0.82rem; font-weight: 500; color: var(--ink);
-    font-family: 'DM Sans', sans-serif; cursor: default; text-align: center; line-height: 1.35;
-  }
-
-  /* ---- Calendar ---- */
-  .calendar-section { margin-top: 1.75rem; }
-  .calendar-box { background: white; border: 1px solid var(--border); border-radius: 14px; padding: 1.25rem 1.4rem; }
-  .calendar-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
-  .calendar-month-label { font-family: 'Playfair Display', serif; font-weight: 700; font-size: 0.95rem; }
-  .calendar-nav-btn {
-    background: none; border: none; cursor: pointer; color: var(--muted);
-    font-size: 1rem; padding: 0.2rem 0.5rem; border-radius: 6px;
-  }
-  .calendar-nav-btn:hover { background: var(--cream); color: var(--ink); }
-  .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; }
-  .calendar-grid .day-name { color: var(--muted); font-weight: 600; font-size: 0.62rem; text-transform: uppercase; padding-bottom: 0.4rem; }
-  .calendar-grid .day-cell { padding: 0.5rem 0; border-radius: 8px; font-size: 0.8rem; color: var(--ink); }
-  .calendar-grid .day-cell.today { background: var(--sage-light); font-weight: 700; color: var(--sage); }
-  .calendar-grid .day-cell.empty { visibility: hidden; }
-  .calendar-footnote { font-size: 0.7rem; color: var(--muted); margin-top: 0.75rem; text-align: center; }
 
 </style>
 </head>
@@ -223,17 +172,17 @@
 </nav>
 
 <div class="page-wrap">
-  <div class="profile-card" id="profileCard">
+  <div class="profile-page" id="profilePage">
     <p class="loading-text" id="loadingText">Cargando tu perfil…</p>
   </div>
 </div>
 
-<div class="avatar-picker-overlay" id="avatarPickerOverlay">
-  <div class="avatar-picker-box">
-    <p class="avatar-picker-title">Elige tu avatar</p>
-    <p class="avatar-picker-sub">Selecciona la imagen que más te represente</p>
+<!-- Avatar picker modal -->
+<div class="modal-overlay" id="avatarModal">
+  <div class="modal-box">
+    <p class="modal-title">Elige tu avatar</p>
     <div class="avatar-options" id="avatarOptions"></div>
-    <button class="avatar-picker-close" id="avatarPickerClose">Cancelar</button>
+    <button class="modal-close" id="avatarModalClose">Cancelar</button>
   </div>
 </div>
 
@@ -247,29 +196,54 @@
 <script src="auth-nav.js"></script>
 <script>
   const supabaseClient = getSupabaseClient();
-  const card = document.getElementById('profileCard');
+  const page = document.getElementById('profilePage');
 
-  // ---- Opciones disponibles ----
-  const BANNER_COLORS = {
-    azul:      '#AEE1F9',
-    verde:     '#C6E8C9',
-    naranja:   '#F7C08A',
-    rojo:      '#F3B6B0',
-    rosa:      '#F6C9DE',
-    morado:    '#D8C6F0',
-    amarillo:  '#F5E6A8'
-  };
-  const AVATAR_OPTIONS = [
-    'assets/avatars/avatar-1.png',
-    'assets/avatars/avatar-2.png',
-    'assets/avatars/avatar-3.png',
-    'assets/avatars/avatar-4.png'
+  // ---- Banner colors ----
+  const BANNER_COLORS = [
+    { key: 'azul',     label: 'Azul claro',   value: '#BFE0F0' },
+    { key: 'verde',    label: 'Verde claro',  value: '#CFE8D3' },
+    { key: 'naranja',  label: 'Naranja',      value: '#F0AA68' },
+    { key: 'rojo',     label: 'Rojo claro',   value: '#F3B3AE' },
+    { key: 'rosa',     label: 'Rosa',         value: '#F3C2D9' },
+    { key: 'morado',   label: 'Morado claro', value: '#D9C7EC' },
+    { key: 'amarillo', label: 'Amarillo',     value: '#F5E29B' }
   ];
 
-  let currentProfile = null;
+  // ---- Avatares (los 4 que pasó Adrian) ----
+  // Los archivos van en una carpeta "avatars/" junto a este profile.html
+  const AVATARS = [
+    { id: 1, src: 'avatars/avatar-1.png' }, // detective con mini-él
+    { id: 2, src: 'avatars/avatar-2.png' }, // maquillaje
+    { id: 3, src: 'avatars/avatar-3.png' }, // manejando
+    { id: 4, src: 'avatars/avatar-4.png' }  // comiendo
+  ];
+
   let currentUserId = null;
-  let selectedBannerKey = 'azul';
-  let selectedAvatar = AVATAR_OPTIONS[0];
+  let prefs = { bannerColor: BANNER_COLORS[1].value, avatarId: 1 };
+  let calDate = new Date();
+
+  function prefsKey(uid) { return `nex_profile_prefs_${uid}`; }
+
+  function loadPrefs(uid) {
+    try {
+      const raw = localStorage.getItem(prefsKey(uid));
+      if (raw) prefs = { ...prefs, ...JSON.parse(raw) };
+    } catch (e) { /* ignore */ }
+  }
+
+  function savePrefs(uid) {
+    try { localStorage.setItem(prefsKey(uid), JSON.stringify(prefs)); } catch (e) {}
+    // Best-effort sync a Supabase. Requiere agregar columnas banner_color (text)
+    // y avatar_id (int2) a la tabla "profiles" — ver nota al final del chat.
+    supabaseClient.from('profiles')
+      .update({ banner_color: prefs.bannerColor, avatar_id: prefs.avatarId })
+      .eq('id', uid)
+      .then(() => {}, () => {});
+  }
+
+  function avatarSrc(id) {
+    return (AVATARS.find(a => a.id === id) || AVATARS[0]).src;
+  }
 
   async function loadProfile() {
     const { data: { session } } = await supabaseClient.auth.getSession();
@@ -284,31 +258,16 @@
 
     const { data: profile, error } = await supabaseClient
       .from('profiles')
-      .select('name, phone, age, tipo_consulta, role, track, banner_color, avatar_choice')
+      .select('name, phone, age, tipo_consulta, role, track')
       .eq('id', user.id)
       .single();
 
-    currentProfile = profile;
+    loadPrefs(user.id);
 
     const name = (profile && profile.name) ? profile.name : (user.email || 'Usuario');
     const isTherapist = profile && profile.role === 'therapist';
 
-    // Valores guardados (o default) para banner y avatar
-    selectedBannerKey = (profile && profile.banner_color && BANNER_COLORS[profile.banner_color])
-      ? profile.banner_color : 'azul';
-    selectedAvatar = (profile && profile.avatar_choice && AVATAR_OPTIONS[profile.avatar_choice - 1])
-      ? AVATAR_OPTIONS[profile.avatar_choice - 1] : AVATAR_OPTIONS[0];
-
-    let rows = `
-      <div class="profile-row">
-        <p class="label">Nombre</p>
-        <p class="value">${escapeHtml(name)}</p>
-      </div>
-      <div class="profile-row">
-        <p class="label">Correo</p>
-        <p class="value">${escapeHtml(user.email || '—')}</p>
-      </div>
-    `;
+    let rows = '';
 
     if (profile && profile.phone) {
       rows += `
@@ -334,62 +293,70 @@
       </div>`;
     }
 
+    if (!rows) {
+      rows = `
+      <div class="profile-row">
+        <p class="label">Correo</p>
+        <p class="value">${escapeHtml(user.email || '—')}</p>
+      </div>`;
+    }
+
     const assignButton = isTherapist
       ? `<a href="assign-track.html" class="btn-primary-full">Asignar tratamiento</a>`
       : '';
 
-    // Sección de botones de escenario: solo para pacientes
-    const scenarioSection = !isTherapist ? `
-      <div class="scenario-section">
-        <p class="section-eyebrow">Tus botones de escenario</p>
-        <div class="scenario-buttons">
-          <button class="scenario-btn" type="button">En la mañana antes de trabajar</button>
-          <button class="scenario-btn" type="button">Bus mañana</button>
-          <button class="scenario-btn" type="button">Simplemente meditación</button>
-        </div>
-      </div>` : '';
+    const swatchesHtml = BANNER_COLORS.map(c => `
+      <button class="color-swatch${c.value === prefs.bannerColor ? ' selected' : ''}"
+              style="background:${c.value}" data-color="${c.value}" title="${c.label}"></button>
+    `).join('');
 
-    // Sección de calendario: para paciente y terapeuta
-    const calendarSection = `
-      <div class="calendar-section">
-        <p class="section-eyebrow">${isTherapist ? 'Calendario' : 'Tu próxima cita'}</p>
-        <div class="calendar-box">
-          <div class="calendar-header">
-            <button class="calendar-nav-btn" id="calPrev" type="button">&#8592;</button>
-            <p class="calendar-month-label" id="calMonthLabel"></p>
-            <button class="calendar-nav-btn" id="calNext" type="button">&#8594;</button>
+    page.innerHTML = `
+      <div class="profile-banner" id="profileBanner" style="background:${prefs.bannerColor}">
+        <button class="banner-color-btn" id="bannerColorBtn" title="Cambiar color de banner">🎨</button>
+        <div class="color-picker" id="colorPicker">${swatchesHtml}</div>
+      </div>
+
+      <div class="profile-header">
+        <button class="profile-avatar-btn" id="avatarBtn" title="Cambiar avatar">
+          <img src="${avatarSrc(prefs.avatarId)}" alt="Avatar de ${escapeHtml(name)}">
+        </button>
+        <div class="profile-idblock">
+          <p class="profile-name">${escapeHtml(name)}</p>
+          <p class="profile-email">${escapeHtml(user.email || '—')}</p>
+        </div>
+        <p class="profile-eyebrow">${isTherapist ? 'Cuenta de terapeuta' : 'Tu cuenta'}</p>
+      </div>
+
+      <div class="profile-grid">
+        <div class="section-block" style="margin-bottom:0;">
+          <p class="section-label">Tu información</p>
+          <div class="profile-box">${rows}</div>
+        </div>
+        <div class="section-block" style="margin-bottom:0;">
+          <p class="section-label">Tu calendario</p>
+          <div class="calendar-box">
+            <div class="calendar-nav">
+              <button id="calPrev">‹</button>
+              <p class="calendar-month-label" id="calLabel"></p>
+              <button id="calNext">›</button>
+            </div>
+            <div class="calendar-grid" id="calGrid"></div>
+            <p class="calendar-empty-note" id="calNote">Aún no tienes citas programadas.</p>
           </div>
-          <div class="calendar-grid" id="calGrid"></div>
-          <p class="calendar-footnote">Aún no tienes citas programadas</p>
-        </div>
-      </div>`;
-
-    card.innerHTML = `
-      <div class="profile-banner" id="profileBanner" style="--banner-color: ${BANNER_COLORS[selectedBannerKey]}">
-        <button class="banner-edit-badge" id="bannerEditBtn" type="button">Cambiar color</button>
-        <div class="banner-color-picker" id="bannerColorPicker">
-          ${Object.entries(BANNER_COLORS).map(([key, hex]) => `
-            <button class="banner-color-dot ${key === selectedBannerKey ? 'active' : ''}"
-              data-key="${key}" style="background:${hex}" title="${key}" type="button"></button>
-          `).join('')}
         </div>
       </div>
-      <div class="profile-card-inner">
-        <div class="profile-header-row">
-          <div class="profile-avatar-wrap">
-            <img class="profile-avatar-img" id="profileAvatarImg" src="${selectedAvatar}" alt="Avatar de ${escapeHtml(name)}">
-            <button class="avatar-edit-badge" id="avatarEditBtn" type="button" title="Cambiar avatar">&#9998;</button>
-          </div>
-          <div class="profile-header-text">
-            <p class="profile-header-tag">${isTherapist ? 'Cuenta de terapeuta' : 'Tu cuenta'}</p>
-            <p class="profile-header-name">${escapeHtml(name)}</p>
-            <p class="profile-header-email">${escapeHtml(user.email || '—')}</p>
-          </div>
+
+      <div class="section-block">
+        <p class="section-label">Tus botones de escenario</p>
+        <div class="scenario-grid">
+          <button class="scenario-card"><span class="emoji">☀️</span>En la mañana antes de trabajar</button>
+          <button class="scenario-card"><span class="emoji">🚌</span>Bus mañana</button>
+          <button class="scenario-card"><span class="emoji">🧘</span>Simplemente meditación</button>
         </div>
-        <div class="profile-box">${rows}</div>
+      </div>
+
+      <div class="action-row">
         ${assignButton}
-        ${scenarioSection}
-        ${calendarSection}
         <button class="btn-secondary" id="logoutBtn">Cerrar sesión</button>
       </div>
     `;
@@ -400,116 +367,92 @@
     });
 
     setupBannerPicker();
-    setupAvatarPicker();
-    setupCalendar();
+    setupAvatarModal();
+    renderCalendar();
+    document.getElementById('calPrev').addEventListener('click', () => shiftMonth(-1));
+    document.getElementById('calNext').addEventListener('click', () => shiftMonth(1));
   }
 
-  // ---- Banner: mostrar/ocultar selector y guardar color ----
+  // ---- Banner color picker ----
   function setupBannerPicker() {
-    const editBtn = document.getElementById('bannerEditBtn');
-    const picker = document.getElementById('bannerColorPicker');
-    const banner = document.getElementById('profileBanner');
-
-    editBtn.addEventListener('click', () => picker.classList.toggle('active'));
-
-    picker.querySelectorAll('.banner-color-dot').forEach(dot => {
-      dot.addEventListener('click', async () => {
-        const key = dot.getAttribute('data-key');
-        selectedBannerKey = key;
-        banner.style.setProperty('--banner-color', BANNER_COLORS[key]);
-        picker.querySelectorAll('.banner-color-dot').forEach(d => d.classList.remove('active'));
-        dot.classList.add('active');
-        picker.classList.remove('active');
-        await saveProfileField({ banner_color: key });
+    const btn = document.getElementById('bannerColorBtn');
+    const picker = document.getElementById('colorPicker');
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      picker.classList.toggle('open');
+    });
+    picker.querySelectorAll('.color-swatch').forEach(sw => {
+      sw.addEventListener('click', () => {
+        const color = sw.dataset.color;
+        prefs.bannerColor = color;
+        document.getElementById('profileBanner').style.background = color;
+        picker.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
+        sw.classList.add('selected');
+        picker.classList.remove('open');
+        savePrefs(currentUserId);
       });
     });
-
-    document.addEventListener('click', (e) => {
-      if (!editBtn.contains(e.target) && !picker.contains(e.target)) {
-        picker.classList.remove('active');
-      }
-    });
+    document.addEventListener('click', () => picker.classList.remove('open'));
   }
 
-  // ---- Avatar: abrir modal, elegir imagen y guardar ----
-  function setupAvatarPicker() {
-    const overlay = document.getElementById('avatarPickerOverlay');
+  // ---- Avatar modal ----
+  function setupAvatarModal() {
+    const modal = document.getElementById('avatarModal');
     const optionsWrap = document.getElementById('avatarOptions');
-    const editBtn = document.getElementById('avatarEditBtn');
-    const closeBtn = document.getElementById('avatarPickerClose');
-    const avatarImg = document.getElementById('profileAvatarImg');
-
-    optionsWrap.innerHTML = AVATAR_OPTIONS.map((src, i) => `
-      <img src="${src}" class="avatar-option-img ${src === selectedAvatar ? 'selected' : ''}"
-        data-index="${i + 1}" data-src="${src}" alt="Opción de avatar ${i + 1}">
+    optionsWrap.innerHTML = AVATARS.map(a => `
+      <button class="avatar-option${a.id === prefs.avatarId ? ' selected' : ''}" data-id="${a.id}">
+        <img src="${a.src}" alt="Avatar ${a.id}">
+      </button>
     `).join('');
 
-    editBtn.addEventListener('click', () => overlay.classList.add('active'));
-    closeBtn.addEventListener('click', () => overlay.classList.remove('active'));
-    overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.classList.remove('active'); });
+    document.getElementById('avatarBtn').addEventListener('click', () => modal.classList.add('open'));
+    document.getElementById('avatarModalClose').addEventListener('click', () => modal.classList.remove('open'));
+    modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('open'); });
 
-    optionsWrap.querySelectorAll('.avatar-option-img').forEach(img => {
-      img.addEventListener('click', async () => {
-        selectedAvatar = img.getAttribute('data-src');
-        avatarImg.src = selectedAvatar;
-        optionsWrap.querySelectorAll('.avatar-option-img').forEach(i => i.classList.remove('selected'));
-        img.classList.add('selected');
-        overlay.classList.remove('active');
-        await saveProfileField({ avatar_choice: parseInt(img.getAttribute('data-index'), 10) });
+    optionsWrap.querySelectorAll('.avatar-option').forEach(opt => {
+      opt.addEventListener('click', () => {
+        const id = parseInt(opt.dataset.id, 10);
+        prefs.avatarId = id;
+        document.querySelector('#avatarBtn img').src = avatarSrc(id);
+        optionsWrap.querySelectorAll('.avatar-option').forEach(o => o.classList.remove('selected'));
+        opt.classList.add('selected');
+        modal.classList.remove('open');
+        savePrefs(currentUserId);
       });
     });
   }
 
-  // ---- Guardar cambios en Supabase ----
-  async function saveProfileField(fields) {
-    if (!currentUserId) return;
-    const { error } = await supabaseClient
-      .from('profiles')
-      .update(fields)
-      .eq('id', currentUserId);
-    if (error) console.error('Error guardando perfil:', error);
-  }
+  // ---- Calendar (vacío por ahora — listo para mostrar citas en el futuro) ----
+  // scheduledAppointments: { 'YYYY-MM-DD': true } — poblar cuando exista la data real
+  const scheduledAppointments = {};
 
-  // ---- Calendario vacío (sin citas por ahora) ----
-  let calViewDate = new Date();
-
-  function setupCalendar() {
-    document.getElementById('calPrev').addEventListener('click', () => {
-      calViewDate.setMonth(calViewDate.getMonth() - 1);
-      renderCalendar();
-    });
-    document.getElementById('calNext').addEventListener('click', () => {
-      calViewDate.setMonth(calViewDate.getMonth() + 1);
-      renderCalendar();
-    });
+  function shiftMonth(delta) {
+    calDate.setMonth(calDate.getMonth() + delta);
     renderCalendar();
   }
 
   function renderCalendar() {
-    const monthNames = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-    const dayNames = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
-    const year = calViewDate.getFullYear();
-    const month = calViewDate.getMonth();
-
-    document.getElementById('calMonthLabel').textContent = `${monthNames[month]} ${year}`;
-
-    const firstDay = new Date(year, month, 1);
-    // Lunes = 0 ... Domingo = 6
-    let startOffset = (firstDay.getDay() + 6) % 7;
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const year = calDate.getFullYear();
+    const month = calDate.getMonth();
     const today = new Date();
 
-    let cells = dayNames.map(d => `<div class="day-name">${d}</div>`).join('');
+    const monthNames = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+    document.getElementById('calLabel').textContent = `${monthNames[month]} ${year}`;
 
-    for (let i = 0; i < startOffset; i++) {
-      cells += `<div class="day-cell empty"></div>`;
-    }
+    const dowLabels = ['Lu','Ma','Mi','Ju','Vi','Sá','Do'];
+    const firstDay = new Date(year, month, 1);
+    const startOffset = (firstDay.getDay() + 6) % 7; // lunes = 0
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    let html = dowLabels.map(d => `<div class="calendar-dow">${d}</div>`).join('');
+    for (let i = 0; i < startOffset; i++) html += `<div class="calendar-day empty"></div>`;
+
     for (let d = 1; d <= daysInMonth; d++) {
       const isToday = d === today.getDate() && month === today.getMonth() && year === today.getFullYear();
-      cells += `<div class="day-cell ${isToday ? 'today' : ''}">${d}</div>`;
+      html += `<div class="calendar-day${isToday ? ' today' : ''}">${d}</div>`;
     }
 
-    document.getElementById('calGrid').innerHTML = cells;
+    document.getElementById('calGrid').innerHTML = html;
   }
 
   function escapeHtml(str) {

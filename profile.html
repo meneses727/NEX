@@ -308,6 +308,11 @@
     return (AVATARS.find(a => a.id === id) || AVATARS[0]).src;
   }
 
+  function pickRandomScenarios(count) {
+    const shuffled = [...SCENARIO_OPTIONS].sort(() => Math.random() - 0.5);
+    return shuffled.slice(0, count).map(o => o.id);
+  }
+
   async function loadProfile() {
     const { data: { session } } = await supabaseClient.auth.getSession();
 
@@ -329,6 +334,12 @@
 
     const name = (profile && profile.name) ? profile.name : (user.email || 'Usuario');
     const isTherapist = profile && profile.role === 'therapist';
+
+    // Si el paciente todavía no tiene escenarios elegidos, arrancamos con 3 al azar
+    if (!isTherapist && (!prefs.scenarios || prefs.scenarios.length === 0)) {
+      prefs.scenarios = pickRandomScenarios(3);
+      savePrefs(user.id);
+    }
 
     let rows = '';
 
@@ -390,6 +401,12 @@
         <p class="profile-eyebrow">${isTherapist ? 'Cuenta de terapeuta' : 'Tu cuenta'}</p>
       </div>
 
+      ${isTherapist ? '' : `
+      <div class="section-block">
+        <p class="section-label">Tus botones de escenario</p>
+        <div class="scenario-grid" id="scenarioGrid"></div>
+      </div>`}
+
       <div class="profile-grid">
         <div class="section-block" style="margin-bottom:0;">
           <p class="section-label">Tu información</p>
@@ -408,12 +425,6 @@
           </div>
         </div>
       </div>
-
-      ${isTherapist ? '' : `
-      <div class="section-block">
-        <p class="section-label">Tus botones de escenario</p>
-        <div class="scenario-grid" id="scenarioGrid"></div>
-      </div>`}
 
       <div class="action-row">
         ${assignButton}

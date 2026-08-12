@@ -103,25 +103,48 @@
   .scenario-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
   @media (max-width: 760px) { .scenario-grid { grid-template-columns: 1fr; } }
   .scenario-card {
+    position: relative;
     background: white; border: 1px solid var(--border); border-radius: 14px;
     padding: 1.5rem 1.25rem; font-size: 0.95rem; font-weight: 500; color: var(--ink);
     text-align: left; font-family: 'DM Sans', sans-serif;
     display: flex; flex-direction: column; gap: 0.5rem; cursor: default; min-height: 88px; justify-content: center;
   }
   .scenario-card .emoji { font-size: 1.4rem; }
-  .scenario-add {
-    cursor: pointer; border-style: dashed; color: var(--muted);
-    align-items: center; text-align: center; justify-content: center;
-    background: var(--cream); transition: border-color 0.2s, color 0.2s;
+  .scenario-remove {
+    position: absolute; top: 0.6rem; right: 0.6rem;
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--cream); color: var(--muted);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem; cursor: pointer; border: none;
   }
-  .scenario-add:hover { border-color: var(--ink); color: var(--ink); }
-  .scenario-add .emoji { font-size: 1.6rem; }
+  .scenario-remove:hover { background: var(--terracotta); color: white; }
 
-  .modal-input {
-    width: 100%; padding: 0.8rem 1rem; border: 1px solid var(--border); border-radius: 10px;
-    font-family: 'DM Sans', sans-serif; font-size: 0.9rem; margin-bottom: 0.75rem; color: var(--ink);
+  .scenario-add-card {
+    background: none; border: 1.5px dashed var(--border); border-radius: 14px;
+    min-height: 88px; cursor: pointer; color: var(--muted);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.6rem; font-family: 'DM Sans', sans-serif;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
   }
-  .modal-input:focus { outline: none; border-color: var(--sage); }
+  .scenario-add-card:hover { border-color: var(--ink); color: var(--ink); background: var(--cream); }
+
+  .scenario-options-list {
+    display: flex; flex-direction: column; gap: 0.5rem;
+    max-height: 55vh; overflow-y: auto; margin-bottom: 1.25rem;
+    text-align: left;
+  }
+  .scenario-option-row {
+    display: flex; align-items: center; gap: 0.75rem;
+    width: 100%; background: white; border: 1.5px solid var(--border);
+    border-radius: 10px; padding: 0.75rem 1rem; cursor: pointer;
+    font-family: 'DM Sans', sans-serif; font-size: 0.85rem; color: var(--ink);
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .scenario-option-row:hover { border-color: var(--ink); }
+  .scenario-option-row.selected { border-color: var(--sage); background: var(--sage-light); }
+  .scenario-option-row .emoji { font-size: 1.1rem; flex-shrink: 0; }
+  .scenario-option-label { flex: 1; }
+  .scenario-option-row .check { color: var(--sage); font-weight: 700; flex-shrink: 0; }
 
   /* ---- Calendar ---- */
   .calendar-box { background: white; border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem 1.6rem; height: 100%; }
@@ -200,14 +223,12 @@
   </div>
 </div>
 
-<!-- Add scenario button modal -->
+<!-- Scenario picker modal -->
 <div class="modal-overlay" id="scenarioModal">
-  <div class="modal-box">
-    <p class="modal-title">Nuevo botón de escenario</p>
-    <input type="text" class="modal-input" id="scenarioEmojiInput" placeholder="Emoji (opcional)" maxlength="4">
-    <input type="text" class="modal-input" id="scenarioTextInput" placeholder="Texto del botón" maxlength="60">
-    <button class="btn-primary-full" id="scenarioAddConfirm" style="width:100%; margin-bottom:0.9rem;">Añadir</button>
-    <button class="modal-close" id="scenarioModalClose">Cancelar</button>
+  <div class="modal-box" style="max-width:440px">
+    <p class="modal-title">Elige tus escenarios</p>
+    <div class="scenario-options-list" id="scenarioOptionsList"></div>
+    <button class="modal-close" id="scenarioModalClose">Cerrar</button>
   </div>
 </div>
 
@@ -243,53 +264,26 @@
     { id: 4, src: 'avatars/avatar-4.png' }  // comiendo
   ];
 
-  let currentUserId = null;
-  let prefs = { bannerColor: BANNER_COLORS[1].value, avatarId: 1 };
-  let calDate = new Date();
-
-  // ---- Botones de escenario ----
-  // Solo viven en memoria de esta sesión — no se guardan en Supabase todavía.
-  let scenarioItems = [
-    { emoji: '☀️', text: 'En la mañana antes de trabajar' },
-    { emoji: '🚌', text: 'Bus mañana' },
-    { emoji: '🧘', text: 'Simplemente meditación' }
+  // ---- Opciones de escenario (técnicas/tratamientos) ----
+  const SCENARIO_OPTIONS = [
+    { id: 'tcc', label: 'Terapia Cognitivo-Conductual (TCC)', emoji: '🧠' },
+    { id: 'act', label: 'Terapia de Aceptación y Compromiso (ACT)', emoji: '🤝' },
+    { id: 'tip', label: 'Terapia Interpersonal (TIP)', emoji: '💬' },
+    { id: 'exposicion', label: 'Exposición Interoceptiva', emoji: '💓' },
+    { id: 'mindfulness', label: 'Mindfulness y Meditación', emoji: '🧘' },
+    { id: 'rebm', label: 'Reducción del Estrés Basada en Mindfulness (REBM)', emoji: '🌿' },
+    { id: 'respiracion', label: 'Técnicas de Respiración y Relajación Muscular Progresiva', emoji: '🌬️' },
+    { id: 'resiliencia', label: 'Entrenamiento en Resiliencia', emoji: '💪' },
+    { id: 'asertividad', label: 'Entrenamiento en Asertividad', emoji: '🗣️' },
+    { id: 'desconexion', label: 'Rituales de Desconexión', emoji: '🔌' },
+    { id: 'aerobico', label: 'Ejercicio Aeróbico', emoji: '🏃' },
+    { id: 'sueno', label: 'Higiene del Sueño', emoji: '😴' },
+    { id: 'nutricion', label: 'Nutrición y Terapia de Luz', emoji: '☀️' }
   ];
 
-  function renderScenarios() {
-    const grid = document.getElementById('scenarioGrid');
-    if (!grid) return;
-    grid.innerHTML = scenarioItems.map(item => `
-      <button class="scenario-card"><span class="emoji">${escapeHtml(item.emoji)}</span>${escapeHtml(item.text)}</button>
-    `).join('') + `
-      <button class="scenario-card scenario-add" id="scenarioAddBtn">
-        <span class="emoji">+</span>Añadir botón
-      </button>
-    `;
-    document.getElementById('scenarioAddBtn').addEventListener('click', () => {
-      document.getElementById('scenarioModal').classList.add('open');
-      document.getElementById('scenarioTextInput').value = '';
-      document.getElementById('scenarioEmojiInput').value = '';
-      document.getElementById('scenarioTextInput').focus();
-    });
-  }
-
-  function setupScenarioModal() {
-    const modal = document.getElementById('scenarioModal');
-    document.getElementById('scenarioModalClose').addEventListener('click', () => modal.classList.remove('open'));
-    modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('open'); });
-
-    document.getElementById('scenarioAddConfirm').addEventListener('click', () => {
-      const text = document.getElementById('scenarioTextInput').value.trim();
-      const emoji = document.getElementById('scenarioEmojiInput').value.trim() || '📌';
-      if (!text) {
-        document.getElementById('scenarioTextInput').focus();
-        return;
-      }
-      scenarioItems.push({ emoji, text });
-      modal.classList.remove('open');
-      renderScenarios();
-    });
-  }
+  let currentUserId = null;
+  let prefs = { bannerColor: BANNER_COLORS[1].value, avatarId: 1, scenarios: [] };
+  let calDate = new Date();
 
   function prefsKey(uid) { return `nex_profile_prefs_${uid}`; }
 
@@ -302,10 +296,10 @@
 
   function savePrefs(uid) {
     try { localStorage.setItem(prefsKey(uid), JSON.stringify(prefs)); } catch (e) {}
-    // Best-effort sync a Supabase. Requiere agregar columnas banner_color (text)
-    // y avatar_id (int2) a la tabla "profiles" — ver nota al final del chat.
+    // Best-effort sync a Supabase. Requiere agregar columnas banner_color (text),
+    // avatar_id (int2) y scenarios (jsonb) a la tabla "profiles" — ver nota al final del chat.
     supabaseClient.from('profiles')
-      .update({ banner_color: prefs.bannerColor, avatar_id: prefs.avatarId })
+      .update({ banner_color: prefs.bannerColor, avatar_id: prefs.avatarId, scenarios: prefs.scenarios })
       .eq('id', uid)
       .then(() => {}, () => {});
   }
@@ -396,12 +390,6 @@
         <p class="profile-eyebrow">${isTherapist ? 'Cuenta de terapeuta' : 'Tu cuenta'}</p>
       </div>
 
-      ${isTherapist ? '' : `
-      <div class="section-block">
-        <p class="section-label">Tus botones de escenario</p>
-        <div class="scenario-grid" id="scenarioGrid"></div>
-      </div>`}
-
       <div class="profile-grid">
         <div class="section-block" style="margin-bottom:0;">
           <p class="section-label">Tu información</p>
@@ -421,6 +409,12 @@
         </div>
       </div>
 
+      ${isTherapist ? '' : `
+      <div class="section-block">
+        <p class="section-label">Tus botones de escenario</p>
+        <div class="scenario-grid" id="scenarioGrid"></div>
+      </div>`}
+
       <div class="action-row">
         ${assignButton}
         <button class="btn-secondary" id="logoutBtn">Cerrar sesión</button>
@@ -434,10 +428,10 @@
 
     setupBannerPicker();
     setupAvatarModal();
+    if (!isTherapist) setupScenarioPicker();
     renderCalendar();
     document.getElementById('calPrev').addEventListener('click', () => shiftMonth(-1));
     document.getElementById('calNext').addEventListener('click', () => shiftMonth(1));
-    if (!isTherapist) { renderScenarios(); setupScenarioModal(); }
   }
 
   // ---- Banner color picker ----
@@ -486,6 +480,75 @@
         modal.classList.remove('open');
         savePrefs(currentUserId);
       });
+    });
+  }
+
+  // ---- Escenarios: renderizado + selector ----
+  function renderScenarios() {
+    const grid = document.getElementById('scenarioGrid');
+    if (!grid) return;
+
+    const selected = prefs.scenarios || [];
+    const cardsHtml = selected.map(id => {
+      const opt = SCENARIO_OPTIONS.find(o => o.id === id);
+      if (!opt) return '';
+      return `
+      <div class="scenario-card" data-id="${opt.id}">
+        <button class="scenario-remove" title="Quitar" data-id="${opt.id}">✕</button>
+        <span class="emoji">${opt.emoji}</span>${escapeHtml(opt.label)}
+      </div>`;
+    }).join('');
+
+    grid.innerHTML = `
+      <button class="scenario-add-card" id="scenarioAddBtn" title="Añadir escenario">+</button>
+      ${cardsHtml}
+    `;
+
+    document.getElementById('scenarioAddBtn').addEventListener('click', openScenarioModal);
+    grid.querySelectorAll('.scenario-remove').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.id;
+        prefs.scenarios = (prefs.scenarios || []).filter(s => s !== id);
+        savePrefs(currentUserId);
+        renderScenarios();
+      });
+    });
+  }
+
+  function openScenarioModal() {
+    const modal = document.getElementById('scenarioModal');
+    const list = document.getElementById('scenarioOptionsList');
+    const selected = prefs.scenarios || [];
+
+    list.innerHTML = SCENARIO_OPTIONS.map(opt => `
+      <button class="scenario-option-row${selected.includes(opt.id) ? ' selected' : ''}" data-id="${opt.id}">
+        <span class="emoji">${opt.emoji}</span>
+        <span class="scenario-option-label">${escapeHtml(opt.label)}</span>
+        ${selected.includes(opt.id) ? '<span class="check">✓</span>' : ''}
+      </button>
+    `).join('');
+
+    list.querySelectorAll('.scenario-option-row').forEach(row => {
+      row.addEventListener('click', () => {
+        const id = row.dataset.id;
+        const arr = prefs.scenarios || [];
+        prefs.scenarios = arr.includes(id) ? arr.filter(s => s !== id) : [...arr, id];
+        savePrefs(currentUserId);
+        renderScenarios();
+        openScenarioModal();
+      });
+    });
+
+    modal.classList.add('open');
+  }
+
+  function setupScenarioPicker() {
+    renderScenarios();
+    document.getElementById('scenarioModalClose').addEventListener('click', () => {
+      document.getElementById('scenarioModal').classList.remove('open');
+    });
+    document.getElementById('scenarioModal').addEventListener('click', (e) => {
+      if (e.target.id === 'scenarioModal') e.currentTarget.classList.remove('open');
     });
   }
 
